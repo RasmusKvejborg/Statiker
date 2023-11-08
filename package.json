@@ -1,0 +1,26 @@
+{
+  "name": "Statiker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "core-js": "^3.8.3",
+    "debounce": "^1.2.1",
+    "firebase": "^10.4.0",
+    "html2pdf.js": "^0.10.1",
+    "vue": "^3.2.13",
+    "vue-head": "^2.2.0",
+    "vue-pdf": "^4.3.0",
+    "vue-router": "^4.0.3",
+    "vuefire": "^3.1.17"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "file-loader": "^6.2.0"
+  }
+}

@@ -1,0 +1,108 @@
+:root {
+  --headlinebackground: #555;
+  --editableField: #555;
+}
+
+body {
+  background-color: #f8f2f2;
+  font-family: Arial, sans-serif;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid var(--headlinebackground);
+  border-radius: 5px;
+  background-color: #222;
+  color: #fff;
+}
+
+table {
+  margin-bottom: 10px;
+  border-collapse: collapse;
+  width: 100%; /* Make the table responsive */
+}
+
+th {
+  border: 1px solid var(--headlinebackground);
+  padding: 10px;
+}
+td {
+  border: 1px solid var(--headlinebackground);
+  padding-inline: 4px;
+}
+
+button + button {
+  margin-left: 10px; /* Adjust margin as needed */
+}
+
+.blue-header {
+  background-color: #a4c9f0;
+  /* white-space: nowrap; */
+  text-align: left;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #f8f8f8; /* Softer background color for alternating rows */
+}
+
+.no-wrap {
+  white-space: nowrap; /* Prevent wrapping for this column */
+}
+
+.plus-button {
+  margin-bottom: 30px;
+}
+
+.inaction-button {
+  background-color: #606060; /* Button background color */
+  color: #fff; /* Button text color */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px; /* Adjust padding as needed */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 20px; /* Adjust the font size as needed */
+}
+
+/* action button */
+.action-button {
+  background-color: #007bff; /* Button background color */
+  color: #fff; /* Button text color */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px; /* Adjust padding as needed */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 20px; /* Adjust the font size as needed */
+  margin-bottom: 20px;
+  margin-right: 10px;
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}
+
+.horizontal-line {
+  display: flex; /* Use flexbox to place elements side by side */
+  gap: 7px; /* Adjust the gap between the input fields as needed */
+}
+
+.sameline-ptag {
+  display: flex;
+}
+
+.invisible-input {
+  border: none; /* Remove the border */
+  background: none; /* Remove the background */
+  outline: none; /* Remove the outline when focused */
+}
+
+.delete {
+  background-color: rgb(140, 0, 0);
+}
+
+.add {
+  background-color: rgb(0, 83, 0);
+}
