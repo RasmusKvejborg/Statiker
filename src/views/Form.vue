@@ -3,120 +3,6 @@
 
   <h2>{{ this.projectNumber + " - " + this.projectName }}</h2>
 
-  <div>
-    <br />
-    <label for="kontrolskema">Kontrolskema: </label>
-    <select
-      id="kontrolskema"
-      v-model="selectedOption"
-      @change="updateTemplateTexts"
-    >
-      <option
-        v-for="templateKey in Object.keys(alltemplates)"
-        :value="templateKey"
-      >
-        {{ templateKey }}
-      </option>
-    </select>
-
-    <div v-for="index in 6" :key="index" class="controlschemes">
-      <h3>B{{ index }}</h3>
-      <table>
-        <thead>
-          <tr class="blue-header">
-            <th>Nr.:</th>
-            <th>Kontrol af</th>
-            <th>Tidspunkt</th>
-            <th>Acceptkriterium</th>
-            <th>Kontrolomfang</th>
-            <th>Kontrolmetode</th>
-            <th>Dokumentationsmetode</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- laver en row for hver række der er i header1 -->
-          <tr
-            v-for="(value, key) in this.templateTexts['B' + index]['Header 1']"
-            :key="key"
-          >
-            <td>
-              <input
-                class="invisible-input"
-                v-model="templateTexts['B' + index]['Header 1'][key]"
-              />
-            </td>
-            <td>
-              <input
-                class="invisible-input"
-                v-model="templateTexts['B' + index]['Header 2'][key]"
-              />
-            </td>
-            <!--  -->
-            <td>
-              <input
-                class="invisible-input"
-                v-model="templateTexts['B' + index]['Header 3'][key]"
-              />
-            </td>
-            <td>
-              <input
-                class="invisible-input"
-                v-model="templateTexts['B' + index]['Header 4'][key]"
-              />
-            </td>
-            <td>
-              <input
-                class="invisible-input"
-                v-model="templateTexts['B' + index]['Header 5'][key]"
-              />
-            </td>
-            <td>
-              <input
-                class="invisible-input"
-                v-model="templateTexts['B' + index]['Header 6'][key]"
-              />
-            </td>
-            <td>
-              <input
-                class="invisible-input"
-                v-model="templateTexts['B' + index]['Header 7'][key]"
-              />
-            </td>
-            <td>
-              <button class="delete" @click="removeRow(index, key)">X</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <button class="add" @click="addRow(index)">+</button>
-    </div>
-    <!-- --------------------oversigt slut ------------------------->
-
-    <!-- <div v-for="key in this.formData.checkBoxValues" :key="key"> -->
-    <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
-    <!-- for hver checkbox der er sat flueben i -->
-    <table class="kontrolplan-tables">
-      <tbody>
-        <!-- KONTROLPLAN First table content (second table er blandet ind, ) -->
-      </tbody>
-    </table>
-  </div>
-
-  <div>
-    <button class="action-button" @click="createLink()">Få link</button>
-
-    <div v-if="isAddingProject">
-      <input
-        v-model="newTemplateName"
-        placeholder="Skabelon-navn"
-        class="project-input"
-      />
-    </div>
-
-    <input type="checkbox" v-model="isAddingProject" />
-    <label for="myCheckbox">Gem ny skabelon til fremtidig brug</label>
-  </div>
   <!-- @click="designSaveResult" -->
   <!-- <div class="notification">Data indsendt!</div> -->
   <!-- v-if="showNotification" -->
@@ -178,8 +64,6 @@ export default {
           console.log("template saved: " + this.newTemplateName);
         }
       }
-      // ovenstående skal ikke gøre noget, det er kun for at gemme templates...
-      // her skal jeg gemme en masse data måske i en ny collection, måske i project, måske HVAD jeg er træt
 
       const newId = "yourGeneratedId";
       this.$router.push(`/form/${newId}`);
