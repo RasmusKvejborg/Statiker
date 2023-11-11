@@ -1,56 +1,54 @@
 <template>
-  <div>
-    <button
-      @click="startAddingProject"
-      class="action-button"
-      v-if="!isAddingProject"
-    >
-      + Opret nyt projekt
-    </button>
-
-    <div v-if="isAddingProject">
-      <input
-        v-model="newProjectName"
-        placeholder="Projektnavn"
-        class="project-input"
-      />
-      <input
-        v-model="newProjectNumber"
-        placeholder="Sagsnummer"
-        class="project-input"
-      />
-      <button @click="saveProject" class="action-button">Gem sag</button>
-    </div>
-
-    <h3>Igangværende sager:</h3>
-
-    <div
-      v-for="(project, index) in projects"
-      :key="index"
-      class="project-container"
-    >
-      <router-link
-        :to="{
-          name: 'project',
-          params: {
-            parameter: project.id,
-            projectName: project.projectName,
-            projectNumber: project.projectNumber,
-          },
-        }"
+  <v-container fluid>
+    <div>
+      <v-btn color="primary" @click="startAddingProject" v-if="!isAddingProject"
+        >+ Opret nyt projekt</v-btn
       >
-        <span class="block">abc</span>
-        <span class="block project-info">
-          {{
-            project.projectNumber
-              ? project.projectNumber + " - " + project.projectName
-              : project.projectName
-          }}
-        </span>
-        <span class="block">def</span>
-      </router-link>
+
+      <div v-if="isAddingProject">
+        <input
+          v-model="newProjectName"
+          placeholder="Projektnavn"
+          class="project-input"
+        />
+        <input
+          v-model="newProjectNumber"
+          placeholder="Sagsnummer"
+          class="project-input"
+        />
+        <v-btn class="my-0" color="primary" @click="saveProject">Gem sag</v-btn>
+      </div>
+
+      <h3>Igangværende sager:</h3>
+
+      <div
+        v-for="(project, index) in projects"
+        :key="index"
+        class="project-container"
+      >
+        <router-link
+          :to="{
+            name: 'project',
+            params: {
+              parameter: project.id,
+              projectName: project.projectName,
+              projectNumber: project.projectNumber,
+            },
+          }"
+        >
+          <span class="block">abc</span>
+          <span class="block project-info">
+            {{
+              project.projectNumber
+                ? project.projectNumber + " - " + project.projectName
+                : project.projectName
+            }}
+          </span>
+          <span class="block">def</span>
+        </router-link>
+      </div>
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script>
