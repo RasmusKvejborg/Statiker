@@ -6220,6 +6220,11 @@
   dependencies:
     "vue-demi" "latest"
 
+"vuetify@^3.4.0":
+  "integrity" "sha512-aW3bJGCUN3fhl62yvsb+Hv6TtMWDqiadN0PTbEB8jd9z46/X1ddzQ/fhMjkqBX69sMFtZvENl3YFGU5c88/8qw=="
+  "resolved" "https://registry.npmjs.org/vuetify/-/vuetify-3.4.0.tgz"
+  "version" "3.4.0"
+
 "watchpack@^2.4.0":
   "integrity" "sha512-Lcvm7MGST/4fup+ifyKi2hjyIAwcdI4HRgtvTpIUxBRhB+RFtUh8XtDOxUfctVCnhVi+QQj49i91OyvzkJl6cg=="
   "resolved" "https://registry.npmjs.org/watchpack/-/watchpack-2.4.0.tgz"
