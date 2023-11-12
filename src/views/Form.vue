@@ -1,17 +1,152 @@
 <template>
-  <br />
+  <v-container fluid>
+    <div>
+      <div v-for="index in 6" :key="index" class="controlschemes">
+        <h3>B{{ index }}</h3>
+        <v-table>
+          <thead>
+            <tr class="blue-header">
+              <th>Nr.:</th>
+              <th>Kontrol af</th>
+              <th>Tidspunkt</th>
+              <th>Acceptkriterium</th>
+              <th>Kontrolomfang</th>
+              <th>Kontrolmetode</th>
+              <th>Dokumentationsmetode</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- laver en row for hver række der er i header1 -->
+            <tr
+              v-for="(value, key) in this.templateTexts['B' + index][
+                'Header 1'
+              ]"
+              :key="key"
+            >
+              <td>
+                <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 1'][key]"
+                />
+              </td>
+              <td>
+                <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 2'][key]"
+                />
+              </td>
+              <!--  -->
+              <td>
+                <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 3'][key]"
+                />
+              </td>
+              <td>
+                <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 4'][key]"
+                />
+              </td>
+              <td>
+                <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 5'][key]"
+                />
+              </td>
+              <td>
+                <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 6'][key]"
+                />
+              </td>
+              <td>
+                <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 7'][key]"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
 
-  <h2>{{ this.projectNumber + " - " + this.projectName }}</h2>
+        <v-table>
+          <thead>
+            <tr class="blue-header">
+              <th>Kontrolresultat</th>
+              <th>Godkendt Dato & sign.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- laver en row for hver række der er i header1 -->
+            <tr>
+              <td>
+                <textarea class="invisible-input width100"></textarea>
+              </td>
+              <td>
+                <textarea class="invisible-input width100"></textarea>
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
+      </div>
+      <!-- --------------------oversigt slut ------------------------->
 
-  <!-- @click="designSaveResult" -->
-  <!-- <div class="notification">Data indsendt!</div> -->
-  <!-- v-if="showNotification" -->
-  <!-- </div> -->
+      <!-- <div v-for="key in this.formData.checkBoxValues" :key="key"> -->
+      <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
+      <!-- for hver checkbox der er sat flueben i -->
+      <table class="kontrolplan-tables">
+        <tbody>
+          <!-- KONTROLPLAN First table content (second table er blandet ind, ) -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="margin20">
+      <v-btn color="primary" @click="saveSubmittedData()">Indsend</v-btn>
+    </div>
+    <!-- @click="designSaveResult" -->
+    <!-- <div class="notification">Data indsendt!</div> -->
+    <!-- v-if="showNotification" -->
+    <!-- </div> -->
+  </v-container>
 </template>
 
 <style scoped>
+.width100 {
+  width: 100%;
+}
+.template-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: white;
+}
 .controlschemes h3 {
   margin-bottom: 2px;
+}
+.controlschemes + .controlschemes {
+  margin-top: 50px;
+}
+
+.add-row-container {
+  margin-top: -20px; /* Adjust as needed */
+  margin-left: 3px;
+}
+.custom-icon-btn {
+  min-width: 0; /* Ensures the button doesn't expand */
+  border-radius: 0; /* Makes the button square */
+}
+.custom-col {
+  margin-right: 0px; /* Adjust the margin as needed */
+}
+
+.margin20 {
+  margin-top: 20px; /* Adjust the margin as needed */
+}
+.margin-20 {
+  margin-top: -10px; /* Adjust the margin as needed */
 }
 </style>
 
@@ -57,15 +192,17 @@ export default {
       //--
       if (this.isAddingProject) {
         if (!this.newTemplateName) {
-          console.log("der mangler en Alert her...");
+          alert("Du mangler at give skabelonen et navn");
           return;
         } else {
           this.saveTemplate();
           console.log("template saved: " + this.newTemplateName);
         }
       }
+      // ovenstående skal ikke gøre noget, det er kun for at gemme templates...
+      // her skal jeg gemme en masse data måske i en ny collection, måske i project, måske HVAD jeg er træt
 
-      const newId = "yourGeneratedId";
+      const newId = this.parameter;
       this.$router.push(`/form/${newId}`);
       // her skal være logik for at gå til næste side...
     },

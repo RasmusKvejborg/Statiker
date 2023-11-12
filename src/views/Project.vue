@@ -122,20 +122,21 @@
       </table>
     </div>
 
-    <div>
+    <div class="margin20">
       <v-row>
-        <v-col class="custom-col">
-          <button class="action-button" @click="createLink()">Få link</button>
+        <v-col>
+          <v-btn color="primary" @click="createLink()">Få link</v-btn>
         </v-col>
-        <v-col v-if="isAddingProject" class="custom-col">
+        <v-col v-if="isAddingProject">
           <input
             v-model="newTemplateName"
             placeholder="Skabelon-navn"
             class="template-input"
           />
         </v-col>
-        <v-col class="custom-col">
+        <v-col>
           <v-checkbox
+            class="margin-20"
             v-model="isAddingProject"
             label="Gem ny skabelon til fremtidig brug"
           ></v-checkbox>
@@ -175,6 +176,13 @@
 }
 .custom-col {
   margin-right: 0px; /* Adjust the margin as needed */
+}
+
+.margin20 {
+  margin-top: 20px; /* Adjust the margin as needed */
+}
+.margin-20 {
+  margin-top: -10px; /* Adjust the margin as needed */
 }
 </style>
 
@@ -230,7 +238,7 @@ export default {
       // ovenstående skal ikke gøre noget, det er kun for at gemme templates...
       // her skal jeg gemme en masse data måske i en ny collection, måske i project, måske HVAD jeg er træt
 
-      const newId = "yourGeneratedId";
+      const newId = this.parameter;
       this.$router.push(`/form/${newId}`);
       // her skal være logik for at gå til næste side...
     },
