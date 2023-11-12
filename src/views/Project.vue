@@ -1,131 +1,180 @@
 <template>
-  <br />
+  <v-container fluid>
+    <h2>{{ this.projectNumber + " - " + this.projectName }}</h2>
 
-  <h2>{{ this.projectNumber + " - " + this.projectName }}</h2>
-
-  <div>
-    <br />
-    <label for="kontrolskema">Kontrolskema: </label>
-    <select
-      id="kontrolskema"
-      v-model="selectedOption"
-      @change="updateTemplateTexts"
-    >
-      <option
-        v-for="templateKey in Object.keys(alltemplates)"
-        :value="templateKey"
+    <div>
+      <label for="kontrolskema">Kontrolskema: </label>
+      <select
+        id="kontrolskema"
+        v-model="selectedOption"
+        @change="updateTemplateTexts"
       >
-        {{ templateKey }}
-      </option>
-    </select>
+        <option
+          v-for="templateKey in Object.keys(alltemplates)"
+          :value="templateKey"
+        >
+          {{ templateKey }}
+        </option>
+      </select>
 
-    <div v-for="index in 6" :key="index" class="controlschemes">
-      <h3>B{{ index }}</h3>
-      <table>
-        <thead>
-          <tr class="blue-header">
-            <th>Nr.:</th>
-            <th>Kontrol af</th>
-            <th>Tidspunkt</th>
-            <th>Acceptkriterium</th>
-            <th>Kontrolomfang</th>
-            <th>Kontrolmetode</th>
-            <th>Dokumentationsmetode</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- laver en row for hver række der er i header1 -->
-          <tr
-            v-for="(value, key) in this.templateTexts['B' + index]['Header 1']"
-            :key="key"
+      <div v-for="index in 6" :key="index" class="controlschemes">
+        <h3>B{{ index }}</h3>
+        <v-table>
+          <thead>
+            <tr class="blue-header">
+              <th>Nr.:</th>
+              <th>Kontrol af</th>
+              <th>Tidspunkt</th>
+              <th>Acceptkriterium</th>
+              <th>Kontrolomfang</th>
+              <th>Kontrolmetode</th>
+              <th>Dokumentationsmetode</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- laver en row for hver række der er i header1 -->
+            <tr
+              v-for="(value, key) in this.templateTexts['B' + index][
+                'Header 1'
+              ]"
+              :key="key"
+            >
+              <td>
+                <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 1'][key]"
+                />
+              </td>
+              <td>
+                <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 2'][key]"
+                />
+              </td>
+              <!--  -->
+              <td>
+                <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 3'][key]"
+                />
+              </td>
+              <td>
+                <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 4'][key]"
+                />
+              </td>
+              <td>
+                <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 5'][key]"
+                />
+              </td>
+              <td>
+                <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 6'][key]"
+                />
+              </td>
+              <td>
+                <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 7'][key]"
+                />
+              </td>
+              <td>
+                <v-btn
+                  @click="removeRow(index, key)"
+                  icon
+                  size="extra small"
+                  class="custom-icon-btn"
+                  color="red"
+                >
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
+
+        <div class="add-row-container">
+          <v-btn
+            @click="addRow(index)"
+            icon
+            size="extra small"
+            class="custom-icon-btn"
+            color="green"
           >
-            <td>
-              <input
-                class="invisible-input"
-                v-model="templateTexts['B' + index]['Header 1'][key]"
-              />
-            </td>
-            <td>
-              <input
-                class="invisible-input"
-                v-model="templateTexts['B' + index]['Header 2'][key]"
-              />
-            </td>
-            <!--  -->
-            <td>
-              <input
-                class="invisible-input"
-                v-model="templateTexts['B' + index]['Header 3'][key]"
-              />
-            </td>
-            <td>
-              <input
-                class="invisible-input"
-                v-model="templateTexts['B' + index]['Header 4'][key]"
-              />
-            </td>
-            <td>
-              <input
-                class="invisible-input"
-                v-model="templateTexts['B' + index]['Header 5'][key]"
-              />
-            </td>
-            <td>
-              <input
-                class="invisible-input"
-                v-model="templateTexts['B' + index]['Header 6'][key]"
-              />
-            </td>
-            <td>
-              <input
-                class="invisible-input"
-                v-model="templateTexts['B' + index]['Header 7'][key]"
-              />
-            </td>
-            <td>
-              <button class="delete" @click="removeRow(index, key)">X</button>
-            </td>
-          </tr>
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </div>
+      </div>
+      <!-- --------------------oversigt slut ------------------------->
+
+      <!-- <div v-for="key in this.formData.checkBoxValues" :key="key"> -->
+      <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
+      <!-- for hver checkbox der er sat flueben i -->
+      <table class="kontrolplan-tables">
+        <tbody>
+          <!-- KONTROLPLAN First table content (second table er blandet ind, ) -->
         </tbody>
       </table>
-      <button class="add" @click="addRow(index)">+</button>
-    </div>
-    <!-- --------------------oversigt slut ------------------------->
-
-    <!-- <div v-for="key in this.formData.checkBoxValues" :key="key"> -->
-    <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
-    <!-- for hver checkbox der er sat flueben i -->
-    <table class="kontrolplan-tables">
-      <tbody>
-        <!-- KONTROLPLAN First table content (second table er blandet ind, ) -->
-      </tbody>
-    </table>
-  </div>
-
-  <div>
-    <button class="action-button" @click="createLink()">Få link</button>
-
-    <div v-if="isAddingProject">
-      <input
-        v-model="newTemplateName"
-        placeholder="Skabelon-navn"
-        class="project-input"
-      />
     </div>
 
-    <input type="checkbox" v-model="isAddingProject" />
-    <label for="myCheckbox">Gem ny skabelon til fremtidig brug</label>
-  </div>
-  <!-- @click="designSaveResult" -->
-  <!-- <div class="notification">Data indsendt!</div> -->
-  <!-- v-if="showNotification" -->
-  <!-- </div> -->
+    <div>
+      <v-row>
+        <v-col class="custom-col">
+          <button class="action-button" @click="createLink()">Få link</button>
+        </v-col>
+        <v-col v-if="isAddingProject" class="custom-col">
+          <input
+            v-model="newTemplateName"
+            placeholder="Skabelon-navn"
+            class="template-input"
+          />
+        </v-col>
+        <v-col class="custom-col">
+          <v-checkbox
+            v-model="isAddingProject"
+            label="Gem ny skabelon til fremtidig brug"
+          ></v-checkbox>
+        </v-col>
+        <v-spacer></v-spacer>
+      </v-row>
+    </div>
+    <!-- @click="designSaveResult" -->
+    <!-- <div class="notification">Data indsendt!</div> -->
+    <!-- v-if="showNotification" -->
+    <!-- </div> -->
+  </v-container>
 </template>
 
 <style scoped>
+.template-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: white;
+}
 .controlschemes h3 {
   margin-bottom: 2px;
+}
+.controlschemes + .controlschemes {
+  margin-top: 50px;
+}
+
+.add-row-container {
+  margin-top: -20px; /* Adjust as needed */
+  margin-left: 3px;
+}
+.custom-icon-btn {
+  min-width: 0; /* Ensures the button doesn't expand */
+  border-radius: 0; /* Makes the button square */
+}
+.custom-col {
+  margin-right: 0px; /* Adjust the margin as needed */
 }
 </style>
 
@@ -171,7 +220,7 @@ export default {
       //--
       if (this.isAddingProject) {
         if (!this.newTemplateName) {
-          console.log("der mangler en Alert her...");
+          alert("Du mangler at give skabelonen et navn");
           return;
         } else {
           this.saveTemplate();

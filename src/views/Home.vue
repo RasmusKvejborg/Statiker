@@ -17,35 +17,51 @@
           class="project-input"
         />
         <v-btn class="my-0" color="primary" @click="saveProject">Gem sag</v-btn>
+        <v-icon class="close-button" @click="cancelAddingProject"
+          >mdi-close</v-icon
+        >
       </div>
 
-      <h3>Igangværende sager:</h3>
+      <v-row class="project-headlines">
+        <v-col cols="3">
+          <!-- Headline 1 -->
+          <h4>Sagsnummer</h4>
+        </v-col>
+
+        <v-col cols="3">
+          <!-- Headline 2 -->
+          <h4>Projektets navn</h4>
+        </v-col>
+
+        <v-col cols="3"> </v-col>
+
+        <v-col cols="3">
+          <!-- Headline 4 -->
+          <h4>Oprettet</h4>
+        </v-col>
+      </v-row>
 
       <div
         v-for="(project, index) in projects"
         :key="index"
         class="project-container"
+        @click="navigateToProject(project)"
       >
-        <router-link
-          :to="{
-            name: 'project',
-            params: {
-              parameter: project.id,
-              projectName: project.projectName,
-              projectNumber: project.projectNumber,
-            },
-          }"
-        >
-          <span class="block">abc</span>
-          <span class="block project-info">
-            {{
-              project.projectNumber
-                ? project.projectNumber + " - " + project.projectName
-                : project.projectName
-            }}
-          </span>
-          <span class="block">def</span>
-        </router-link>
+        <v-row>
+          <v-col cols="3">
+            {{ project.projectNumber && project.projectNumber }}
+          </v-col>
+
+          <v-col cols="3">
+            {{ project.projectName && project.projectName }}
+          </v-col>
+
+          <v-col cols="3"> </v-col>
+
+          <v-col cols="3">
+            {{ project.date && formatDate(project.date) }}
+          </v-col>
+        </v-row>
       </div>
     </div>
   </v-container>
@@ -61,6 +77,7 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
+import { format, parseISO } from "date-fns";
 
 export default {
   data() {
@@ -126,7 +143,7 @@ export default {
               id: docSnapshot.id, // Include the document ID
               projectName: data.projectName ? data.projectName : null,
               projectNumber: data.projectNumber ? data.projectNumber : null,
-              date: data.date,
+              date: data.date ? data.date.toDate() : null, // Convert to Date object
             };
             projectList.push(project);
           }
@@ -139,6 +156,34 @@ export default {
         console.error("Error fetching documents:", error);
       }
     },
+
+    formatDate(date) {
+      if (!date) return "";
+
+      const parsedDate = new Date(date);
+
+      const day = parsedDate.getDate();
+      const month = parsedDate.getMonth() + 1; // Month is zero-based
+      const year = parsedDate.getFullYear();
+
+      const formattedDate = `${day}/${month}`;
+
+      if (year !== new Date().getFullYear()) {
+        return `${formattedDate} - ${year}`;
+      }
+
+      return formattedDate;
+    },
+    navigateToProject(project) {
+      this.$router.push({
+        name: "project",
+        params: {
+          parameter: project.id,
+          projectName: project.projectName,
+          projectNumber: project.projectNumber,
+        },
+      });
+    },
   }, // -----end of methods-----
 
   created() {
@@ -149,17 +194,37 @@ export default {
 
 <style scoped>
 button {
-  margin-top: 40px;
+  margin-top: 10px;
 }
 
 .project-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 5px;
   margin: 10px 0;
   padding: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition: background-color 0.3s, box-shadow 0.3s; /* Add smooth transition */
+}
+
+.close-button {
+  cursor: pointer;
+  margin-left: 5px;
+  font-size: 18px;
+  color: #555; /* Adjust the color as needed */
+}
+
+.close-button:hover {
+  color: #333; /* Change color on hover if desired */
+}
+
+.project-container:hover {
+  background-color: #f0f0f0; /* Change background color on hover */
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Add stronger shadow on hover */
+}
+.project-headlines {
+  margin-top: 20px;
+  margin-right: 0px;
 }
 
 /* .project-title p {            // god måde at vise at man kan fjerne noget for p tags kun for det her sted.
