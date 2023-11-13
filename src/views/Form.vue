@@ -13,6 +13,8 @@
               <th>Kontrolomfang</th>
               <th>Kontrolmetode</th>
               <th>Dokumentationsmetode</th>
+              <th>Kontrolresultat</th>
+              <th>Godkendt Dato & sign.</th>
             </tr>
           </thead>
           <tbody>
@@ -66,20 +68,6 @@
                   v-model="templateTexts['B' + index]['Header 7'][key]"
                 />
               </td>
-            </tr>
-          </tbody>
-        </v-table>
-
-        <v-table>
-          <thead>
-            <tr class="blue-header">
-              <th>Kontrolresultat</th>
-              <th>Godkendt Dato & sign.</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- laver en row for hver række der er i header1 -->
-            <tr>
               <td>
                 <textarea class="invisible-input width100"></textarea>
               </td>
