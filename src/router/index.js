@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Project from "../views/Project.vue";
 import Form from "../views/Form.vue";
+import ProjectOverview from "../views/ProjectOverview.vue";
 
 import Home from "../views/Home.vue";
 
@@ -16,6 +17,13 @@ const routes = [
     component: Project,
     props: true,
   },
+  {
+    path: "/projectOverview/:parameter/:projectNumber/:projectName",
+    name: "projectOverview",
+    component: ProjectOverview,
+    props: true,
+  },
+
   {
     path: "/form/:parameter",
     name: "form",

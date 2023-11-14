@@ -3,11 +3,11 @@
     <h2>{{ this.projectNumber + " - " + this.projectName }}</h2>
 
     <div>
-      <label for="kontrolskema">Kontrolskema: </label>
+      <label for="kontrolskema">Vælg skabelon: </label>
       <select
         id="kontrolskema"
         v-model="selectedOption"
-        @change="updateTemplateTexts"
+        @change="updateTemplateTexts()"
       >
         <option
           v-for="templateKey in Object.keys(alltemplates)"
@@ -42,7 +42,7 @@
             >
               <td>
                 <input
-                  class="invisible-input"
+                  class="invisible-input min-width"
                   v-model="templateTexts['B' + index]['Header 1'][key]"
                 />
               </td>
@@ -221,6 +221,8 @@ export default {
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
     updateTemplateTexts() {
+      console.log("hej" + this.selectedOption);
+
       this.templateTexts = templateTexts[this.selectedOption];
     },
 
@@ -235,12 +237,9 @@ export default {
           console.log("template saved: " + this.newTemplateName);
         }
       }
-      // ovenstående skal ikke gøre noget, det er kun for at gemme templates...
-      // her skal jeg gemme en masse data måske i en ny collection, måske i project, måske HVAD jeg er træt
 
       const newId = this.parameter;
       this.$router.push(`/form/${newId}`);
-      // her skal være logik for at gå til næste side...
     },
 
     startAddingTemplate() {
@@ -262,7 +261,7 @@ export default {
         headernumber++
       ) {
         this.templateTexts["B" + index]["Header " + headernumber][lastKey + 1] =
-          "";
+          headernumber == 1 ? [lastKey + 1] : ""; // adds 4 to the first column
       }
 
       console.log(this.templateTexts["B" + index]);

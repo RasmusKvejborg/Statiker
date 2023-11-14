@@ -7,15 +7,16 @@
 
       <div v-if="isAddingProject">
         <input
-          v-model="newProjectName"
-          placeholder="Projektnavn"
-          class="project-input"
-        />
-        <input
           v-model="newProjectNumber"
           placeholder="Sagsnummer"
           class="project-input"
         />
+        <input
+          v-model="newProjectName"
+          placeholder="Projektnavn"
+          class="project-input"
+        />
+
         <v-btn class="my-0" color="primary" @click="saveProject">Gem sag</v-btn>
         <v-icon class="close-button" @click="cancelAddingProject"
           >mdi-close</v-icon
@@ -176,7 +177,7 @@ export default {
     },
     navigateToProject(project) {
       this.$router.push({
-        name: "project",
+        name: "projectOverview",
         params: {
           parameter: project.id,
           projectName: project.projectName,
@@ -195,16 +196,6 @@ export default {
 <style scoped>
 button {
   margin-top: 10px;
-}
-
-.project-container {
-  background-color: #fff;
-  border-radius: 5px;
-  margin: 10px 0;
-  padding: 10px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  cursor: pointer; /* Change cursor to pointer on hover */
-  transition: background-color 0.3s, box-shadow 0.3s; /* Add smooth transition */
 }
 
 .close-button {
@@ -229,16 +220,6 @@ button {
 
 /* .project-title p {            // god måde at vise at man kan fjerne noget for p tags kun for det her sted.
   margin: 0; /* Remove default margin from p tags */
-
-.project-input {
-  flex: 1; /* Take up the available space */
-  padding: 10px;
-  border: 1px solid var(--headlinebackground);
-  border-radius: 5px;
-  background-color: #fff;
-  color: #333;
-  margin-right: 10px; /* Add some spacing between the input and button */
-}
 
 .project-title {
   display: flex;

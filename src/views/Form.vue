@@ -6,7 +6,7 @@
         <v-table>
           <thead>
             <tr class="blue-header">
-              <th>Nr.:</th>
+              <th class="min-width">Nr.:</th>
               <th>Kontrol af</th>
               <th>Tidspunkt</th>
               <th>Acceptkriterium</th>
@@ -14,7 +14,7 @@
               <th>Kontrolmetode</th>
               <th>Dokumentationsmetode</th>
               <th>Kontrolresultat</th>
-              <th>Godkendt Dato & sign.</th>
+              <th>Godkendt dato & initialer</th>
             </tr>
           </thead>
           <tbody>
@@ -27,7 +27,7 @@
             >
               <td>
                 <input
-                  class="invisible-input"
+                  class="invisible-input min-width"
                   v-model="templateTexts['B' + index]['Header 1'][key]"
                 />
               </td>
@@ -128,13 +128,6 @@
 }
 .custom-col {
   margin-right: 0px; /* Adjust the margin as needed */
-}
-
-.margin20 {
-  margin-top: 20px; /* Adjust the margin as needed */
-}
-.margin-20 {
-  margin-top: -10px; /* Adjust the margin as needed */
 }
 </style>
 
