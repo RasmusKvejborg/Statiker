@@ -3,8 +3,8 @@
     <h2>{{ this.projectNumber + " - " + this.projectName }}</h2>
 
     <div>
-      <label for="kontrolskema">Vælg skabelon: </label>
-      <select
+      <!-- <label for="kontrolskema">Vælg skabelon: </label> -->
+      <!-- <select
         id="kontrolskema"
         v-model="selectedOption"
         @change="updateTemplateTexts()"
@@ -15,7 +15,17 @@
         >
           {{ templateKey }}
         </option>
-      </select>
+      </select> -->
+
+      <v-select
+        v-model="selectedOption"
+        :items="Object.keys(alltemplates)"
+        @change="updateTemplateTexts()"
+      >
+        <template v-slot:label>
+          <span style="font-size: 14px">Vælg skabelon:</span>
+        </template>
+      </v-select>
 
       <div v-for="index in 6" :key="index" class="controlschemes">
         <h3>B{{ index }}</h3>
@@ -54,7 +64,13 @@
               </td>
               <!--  -->
               <td>
+                <!-- <input
+                  class="invisible-input"
+                  v-model="templateTexts['B' + index]['Header 3'][key]"
+                /> -->
+
                 <input
+                  id="autocompleteInput"
                   class="invisible-input"
                   v-model="templateTexts['B' + index]['Header 3'][key]"
                 />
@@ -184,6 +200,13 @@
 .margin-20 {
   margin-top: -10px; /* Adjust the margin as needed */
 }
+
+/* #kontrolskema {
+  background-color: #f2f2f2;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+} */
 </style>
 
 <script>
@@ -221,8 +244,6 @@ export default {
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
     updateTemplateTexts() {
-      console.log("hej" + this.selectedOption);
-
       this.templateTexts = templateTexts[this.selectedOption];
     },
 

@@ -3,80 +3,76 @@
     <div>
       <div v-for="index in 6" :key="index" class="controlschemes">
         <h3>B{{ index }}</h3>
-        <v-table>
-          <thead>
-            <tr class="blue-header">
-              <th class="min-width">Nr.:</th>
-              <th>Kontrol af</th>
-              <th>Tidspunkt</th>
-              <th>Acceptkriterium</th>
-              <th>Kontrolomfang</th>
-              <th>Kontrolmetode</th>
-              <th>Dokumentationsmetode</th>
-              <th>Kontrolresultat</th>
-              <th>Godkendt dato & initialer</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- laver en row for hver række der er i header1 -->
-            <tr
-              v-for="(value, key) in this.templateTexts['B' + index][
-                'Header 1'
-              ]"
-              :key="key"
-            >
-              <td>
-                <input
-                  class="invisible-input min-width"
-                  v-model="templateTexts['B' + index]['Header 1'][key]"
-                />
-              </td>
-              <td>
-                <input
-                  class="invisible-input"
-                  v-model="templateTexts['B' + index]['Header 2'][key]"
-                />
-              </td>
-              <!--  -->
-              <td>
-                <input
-                  class="invisible-input"
-                  v-model="templateTexts['B' + index]['Header 3'][key]"
-                />
-              </td>
-              <td>
-                <input
-                  class="invisible-input"
-                  v-model="templateTexts['B' + index]['Header 4'][key]"
-                />
-              </td>
-              <td>
-                <input
-                  class="invisible-input"
-                  v-model="templateTexts['B' + index]['Header 5'][key]"
-                />
-              </td>
-              <td>
-                <input
-                  class="invisible-input"
-                  v-model="templateTexts['B' + index]['Header 6'][key]"
-                />
-              </td>
-              <td>
-                <input
-                  class="invisible-input"
-                  v-model="templateTexts['B' + index]['Header 7'][key]"
-                />
-              </td>
-              <td>
-                <textarea class="invisible-input width100"></textarea>
-              </td>
-              <td>
-                <textarea class="invisible-input width100"></textarea>
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
+        <div class="container">
+          <table>
+            <thead>
+              <tr class="blue-header">
+                <th class="min-width">Nr.:</th>
+                <th>Kontrol af</th>
+                <th>Tidspunkt</th>
+                <th>Acceptkriterium</th>
+                <th>Kontrolomfang</th>
+                <th>Kontrolmetode</th>
+                <th>Dokumentationsmetode</th>
+                <th class="fixed blue-header">Kontrolresultat</th>
+                <th class="fixed2 blue-header">Godkendt dato & init.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- laver en row for hver række der er i header1 -->
+              <tr
+                class="tr"
+                v-for="(value, key) in this.templateTexts['B' + index][
+                  'Header 1'
+                ]"
+                :key="key"
+              >
+                <td>
+                  <p class="no-wrap">
+                    {{ templateTexts["B" + index]["Header 1"][key] }}
+                  </p>
+                </td>
+                <td>
+                  <p class="no-wrap">
+                    {{ templateTexts["B" + index]["Header 2"][key] }}
+                  </p>
+                </td>
+                <!--  -->
+                <td>
+                  <p class="no-wrap">
+                    {{ templateTexts["B" + index]["Header 3"][key] }}
+                  </p>
+                </td>
+                <td>
+                  <p class="no-wrap">
+                    {{ templateTexts["B" + index]["Header 4"][key] }}
+                  </p>
+                </td>
+                <td>
+                  <p class="no-wrap">
+                    {{ templateTexts["B" + index]["Header 5"][key] }}
+                  </p>
+                </td>
+                <td>
+                  <p class="no-wrap">
+                    {{ templateTexts["B" + index]["Header 6"][key] }}
+                  </p>
+                </td>
+                <td>
+                  <p class="no-wrap">
+                    {{ templateTexts["B" + index]["Header 7"][key] }}
+                  </p>
+                </td>
+                <td class="fixedtd">
+                  <textarea class="textarea"></textarea>
+                </td>
+                <td class="fixedtd2">
+                  <textarea class="textarea2"></textarea>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <!-- --------------------oversigt slut ------------------------->
 
@@ -128,6 +124,50 @@
 }
 .custom-col {
   margin-right: 0px; /* Adjust the margin as needed */
+}
+
+.container {
+  overflow-x: scroll;
+  margin-right: 600px;
+}
+
+.fixed {
+  position: absolute;
+  right: 184px;
+  width: 430px;
+}
+.fixed2 {
+  position: absolute;
+  right: 10px;
+}
+
+.fixedtd {
+  position: absolute;
+  right: 10px;
+  width: 184px;
+}
+.fixedtd2 {
+  position: absolute;
+  right: 194px;
+  width: 420px;
+}
+.tr {
+  height: 100px;
+}
+.textarea {
+  width: 184px;
+  height: 95px;
+  resize: none;
+  outline: none;
+  padding-right: 10px;
+}
+
+.textarea2 {
+  width: 420px;
+  height: 95px;
+  resize: none;
+  outline: none;
+  padding-right: 5px;
 }
 </style>
 

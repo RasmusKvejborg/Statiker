@@ -45,3 +45,21 @@ export async function addDocumentIdToProject(
     console.error("Error adding/updating field in the project:", error);
   }
 }
+
+export function formatDate(date) {
+  if (!date) return "";
+
+  const parsedDate = new Date(date);
+
+  const day = parsedDate.getDate();
+  const month = parsedDate.getMonth() + 1; // Month is zero-based
+  const year = parsedDate.getFullYear();
+
+  const formattedDate = `${day}/${month}`;
+
+  if (year !== new Date().getFullYear()) {
+    return `${formattedDate} - ${year}`;
+  }
+
+  return formattedDate;
+}

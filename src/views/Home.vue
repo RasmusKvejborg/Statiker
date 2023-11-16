@@ -78,7 +78,7 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import { format, parseISO } from "date-fns";
+import { formatDate } from "../components/utils.js";
 
 export default {
   data() {
@@ -159,22 +159,9 @@ export default {
     },
 
     formatDate(date) {
-      if (!date) return "";
-
-      const parsedDate = new Date(date);
-
-      const day = parsedDate.getDate();
-      const month = parsedDate.getMonth() + 1; // Month is zero-based
-      const year = parsedDate.getFullYear();
-
-      const formattedDate = `${day}/${month}`;
-
-      if (year !== new Date().getFullYear()) {
-        return `${formattedDate} - ${year}`;
-      }
-
-      return formattedDate;
+      return formatDate(date);
     },
+
     navigateToProject(project) {
       this.$router.push({
         name: "projectOverview",
@@ -207,15 +194,6 @@ button {
 
 .close-button:hover {
   color: #333; /* Change color on hover if desired */
-}
-
-.project-container:hover {
-  background-color: #f0f0f0; /* Change background color on hover */
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Add stronger shadow on hover */
-}
-.project-headlines {
-  margin-top: 20px;
-  margin-right: 0px;
 }
 
 /* .project-title p {            // god måde at vise at man kan fjerne noget for p tags kun for det her sted.

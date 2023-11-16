@@ -1,3 +1,11 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+/* @import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities"; */
+
 :root {
   --headlinebackground: #555;
   --editableField: #555;
@@ -67,12 +75,22 @@ table tbody tr:nth-child(even) {
   transition: background-color 0.3s, box-shadow 0.3s; /* Add smooth transition */
 }
 
+.project-container:hover {
+  background-color: #f0f0f0; /* Change background color on hover */
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Add stronger shadow on hover */
+}
+
 .no-wrap {
   white-space: nowrap; /* Prevent wrapping for this column */
 }
 
 .min-width {
   width: 10px;
+}
+
+.project-headlines {
+  margin-top: 20px;
+  padding-inline: 8px;
 }
 
 .plus-button {
