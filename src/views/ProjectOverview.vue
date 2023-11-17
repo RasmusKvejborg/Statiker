@@ -37,7 +37,7 @@
       </div>
 
       <!-- skal kun vises hvis der er kontrolskemaer. -->
-      <div v-if="controlSchemes">
+      <div v-if="Object.keys(controlSchemes).length > 0">
         <v-row class="project-headlines">
           <v-col cols="3">
             <h4>Kontrolskema navn</h4>
@@ -62,7 +62,7 @@
           v-for="(controlScheme, index) in controlSchemes"
           :key="index"
           class="project-container"
-          @click="navigateToControlScheme(controlScheme.id)"
+          @click="navigateToForm(controlScheme.id)"
         >
           <v-row>
             <v-col cols="3">
@@ -79,7 +79,7 @@
               }}
             </v-col>
 
-            <v-col cols="3"> </v-col>
+            <v-col cols="3"></v-col>
             <v-col cols="2">{{
               controlScheme.date && formatDate(controlScheme.date)
             }}</v-col>
@@ -116,7 +116,7 @@ export default {
       isAddingControl: false,
       newControlName: "", //controlSchemeName
       newControlNumber: "",
-      controlSchemes: null,
+      controlSchemes: {},
     };
   },
 
@@ -124,6 +124,7 @@ export default {
     startAddingControlScheme() {
       // bare til at vise navneinput
       this.isAddingControl = true;
+      console.log(Object.keys(this.controlSchemes).length);
     },
 
     saveControlScheme() {
@@ -164,6 +165,7 @@ export default {
       this.fetchControlSchemes();
       // Reset the input field and hide it
       this.cancelAddingControlScheme();
+      this.navigateToControlScheme(docRef.id);
     },
     // -- end of save control scheme end ---
 
@@ -208,15 +210,21 @@ export default {
       return formatDate(date);
     },
 
-    navigateToControlScheme(controlScheme) {
+    navigateToControlScheme(controlSchemeId) {
+      //navigates to the /project where you can edit the control sceme
       this.$router.push({
         name: "project",
         params: {
-          parameter: this.projectId,
+          parameter: controlSchemeId, // this.projectId,
           projectName: this.projectNumber,
           projectNumber: this.projectName,
         },
       });
+    },
+
+    navigateToForm(controlSchemeId) {
+      this.linkCreated = `/form/${controlSchemeId}`;
+      window.open(this.linkCreated, "_blank");
     },
   },
   created() {

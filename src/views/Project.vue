@@ -3,24 +3,10 @@
     <h2>{{ this.projectNumber + " - " + this.projectName }}</h2>
 
     <div>
-      <!-- <label for="kontrolskema">Vælg skabelon: </label> -->
-      <!-- <select
-        id="kontrolskema"
-        v-model="selectedOption"
-        @change="updateTemplateTexts()"
-      >
-        <option
-          v-for="templateKey in Object.keys(alltemplates)"
-          :value="templateKey"
-        >
-          {{ templateKey }}
-        </option>
-      </select> -->
-
       <v-select
         v-model="selectedOption"
         :items="Object.keys(alltemplates)"
-        @change="updateTemplateTexts()"
+        @update:modelValue="setCurrentText()"
       >
         <template v-slot:label>
           <span style="font-size: 14px">Vælg skabelon:</span>
@@ -45,58 +31,51 @@
           <tbody>
             <!-- laver en row for hver række der er i header1 -->
             <tr
-              v-for="(value, key) in this.templateTexts['B' + index][
-                'Header 1'
-              ]"
+              v-for="(value, key) in this.currentTexts['B' + index]['Header 1']"
               :key="key"
             >
               <td>
                 <input
                   class="invisible-input min-width"
-                  v-model="templateTexts['B' + index]['Header 1'][key]"
+                  v-model="currentTexts['B' + index]['Header 1'][key]"
                 />
               </td>
               <td>
                 <input
                   class="invisible-input"
-                  v-model="templateTexts['B' + index]['Header 2'][key]"
+                  v-model="currentTexts['B' + index]['Header 2'][key]"
                 />
               </td>
               <!--  -->
               <td>
-                <!-- <input
-                  class="invisible-input"
-                  v-model="templateTexts['B' + index]['Header 3'][key]"
-                /> -->
-
                 <input
                   id="autocompleteInput"
                   class="invisible-input"
-                  v-model="templateTexts['B' + index]['Header 3'][key]"
+                  v-model="currentTexts['B' + index]['Header 3'][key]"
                 />
               </td>
               <td>
                 <input
                   class="invisible-input"
-                  v-model="templateTexts['B' + index]['Header 4'][key]"
+                  v-model="currentTexts['B' + index]['Header 4'][key]"
                 />
               </td>
               <td>
                 <input
                   class="invisible-input"
-                  v-model="templateTexts['B' + index]['Header 5'][key]"
+                  v-model="currentTexts['B' + index]['Header 5'][key]"
                 />
               </td>
               <td>
                 <input
                   class="invisible-input"
-                  v-model="templateTexts['B' + index]['Header 6'][key]"
+                  v-model="currentTexts['B' + index]['Header 6'][key]"
                 />
               </td>
               <td>
                 <input
                   class="invisible-input"
-                  v-model="templateTexts['B' + index]['Header 7'][key]"
+                  v-model="currentTexts['B' + index]['Header 7'][key]"
                 />
               </td>
               <td>
@@ -127,15 +106,6 @@
         </div>
       </div>
       <!-- --------------------oversigt slut ------------------------->
-
-      <!-- <div v-for="key in this.formData.checkBoxValues" :key="key"> -->
-      <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
-      <!-- for hver checkbox der er sat flueben i -->
-      <table class="kontrolplan-tables">
-        <tbody>
-          <!-- KONTROLPLAN First table content (second table er blandet ind, ) -->
-        </tbody>
-      </table>
     </div>
 
     <div class="margin20">
@@ -175,12 +145,6 @@
   font-size: 16px;
   background-color: white;
 }
-.controlschemes h3 {
-  margin-bottom: 2px;
-}
-.controlschemes + .controlschemes {
-  margin-top: 50px;
-}
 
 .add-row-container {
   margin-top: -20px; /* Adjust as needed */
@@ -190,9 +154,6 @@
   min-width: 0; /* Ensures the button doesn't expand */
   border-radius: 0; /* Makes the button square */
 }
-.custom-col {
-  margin-right: 0px; /* Adjust the margin as needed */
-}
 
 .margin20 {
   margin-top: 20px; /* Adjust the margin as needed */
@@ -200,27 +161,27 @@
 .margin-20 {
   margin-top: -10px; /* Adjust the margin as needed */
 }
-
-/* #kontrolskema {
-  background-color: #f2f2f2;
-  padding: 4px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-} */
 </style>
 
 <script>
 ///////////////////////////////////////////////////////////////////// script ////////////////////////////////////////////////////////////////////////////////
 // @ is an alias to /src
-import { templateTexts } from "@/components/templateTexts.js";
+import { templateTexts as templateTextsFromFile } from "@/components/templateTexts.js";
 import { updateProjectStatus } from "@/components/utils.js";
 
-import { collection, addDoc, getDocs, getDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  getDoc,
+  doc,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "../firebase.js";
 
 export default {
   props: {
-    parameter: String,
+    parameter: String, //parameter er i dette tilfælde controlSchemeId
     projectName: String,
     projectNumber: String,
   },
@@ -228,8 +189,8 @@ export default {
   data() {
     return {
       selectedOption: "Beton: Armerede fundamenter",
-      alltemplates: templateTexts,
-      templateTexts: null, // opdateres i updateTemplatetexts som køres ved created
+      alltemplates: templateTextsFromFile,
+      currentTexts: null, // opdateres i updateTemplatetexts som køres ved created
       selectedValue: null,
       isAddingProject: false, // Flag to show/hide the input field
       newTemplateName: null,
@@ -237,18 +198,17 @@ export default {
   },
 
   created() {
-    // this.fetchProjectName();
     this.fetchTemplates();
-    this.updateTemplateTexts();
+    this.setCurrentText();
   },
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
-    updateTemplateTexts() {
-      this.templateTexts = templateTexts[this.selectedOption];
+    setCurrentText() {
+      // her ku jeg måske sige indsæt fetched templatetexts hvis der er nogle, ellers vil den gå derind:
+      this.currentTexts = templateTextsFromFile[this.selectedOption];
     },
 
-    createLink() {
-      //--
+    async createLink() {
       if (this.isAddingProject) {
         if (!this.newTemplateName) {
           alert("Du mangler at give skabelonen et navn");
@@ -259,8 +219,29 @@ export default {
         }
       }
 
-      const newId = this.parameter;
-      this.$router.push(`/form/${newId}`);
+      // this.addObjectToControlScheme();
+      // create an alert here and dont go to the routing before you've pressed OK to the alert
+      alert("hdfjasf");
+      // const newId = this.parameter;
+      // this.$router.push(`/form/${newId}`);
+    },
+
+    //------ update controlschemes -----
+    async addObjectToControlScheme() {
+      console.log("den har nu et object");
+      const controlSchemeRef = doc(db, "controlSchemes", this.parameter); //parameter er i dette tilfælde controlSchemeId
+
+      try {
+        const dataObj = {
+          controlSchemeTexts: this.currentTexts,
+        };
+
+        const docRef = await setDoc(controlSchemeRef, dataObj, { merge: true });
+
+        return;
+      } catch (error) {
+        console.error("Error adding/updating field in the project:", error);
+      }
     },
 
     startAddingTemplate() {
@@ -270,9 +251,9 @@ export default {
 
     // -------------------- add row ---------------
     addRow(index) {
-      let numberOfHeaders = Object.keys(this.templateTexts["B" + index]).length;
+      let numberOfHeaders = Object.keys(this.currentTexts["B" + index]).length;
 
-      let keys = Object.keys(this.templateTexts["B" + index]["Header 6"]);
+      let keys = Object.keys(this.currentTexts["B" + index]["Header 6"]);
       let lastKey = parseInt(keys[keys.length - 1]) || 0;
 
       // for each header, set an empty property called 4 (if lastKey is 3) and set the value to "" so it will be {4:""}
@@ -281,23 +262,21 @@ export default {
         headernumber <= numberOfHeaders;
         headernumber++
       ) {
-        this.templateTexts["B" + index]["Header " + headernumber][lastKey + 1] =
-          headernumber == 1 ? [lastKey + 1] : ""; // adds 4 to the first column
+        this.currentTexts["B" + index]["Header " + headernumber][lastKey + 1] =
+          headernumber == 1 ? lastKey + 1 : ""; // adds 4 to the first column
       }
-
-      console.log(this.templateTexts["B" + index]);
     },
 
     // -------------removeRow-----------------
     removeRow(index, rowNumber) {
-      let numberOfHeaders = Object.keys(this.templateTexts["B" + index]).length;
+      let numberOfHeaders = Object.keys(this.currentTexts["B" + index]).length;
 
       for (
         let headernumber = 1;
         headernumber <= numberOfHeaders;
         headernumber++
       ) {
-        delete this.templateTexts["B" + index]["Header " + headernumber][
+        delete this.currentTexts["B" + index]["Header " + headernumber][
           rowNumber
         ];
       }
@@ -309,7 +288,7 @@ export default {
       const dataObj = {
         accountId: null,
         templateName: this.newTemplateName,
-        templateObject: this.templateTexts,
+        templateObject: this.currentTexts,
       };
       const docRef = await addDoc(colRef, dataObj);
       console.log("project was created with ID: ", docRef.id); // DET HER SKAL JEG BRUGE

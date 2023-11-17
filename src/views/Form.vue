@@ -1,6 +1,11 @@
 <template>
   <v-container fluid>
-    <div>
+    <div v-if="this.loading">Loading...</div>
+    <div v-else-if="!this.leftFormData && !this.loading">
+      Fejl: Der mangler at blive gemt noget data til dette kontrolskema da det
+      blev oprettet. Rediger-funktion kommer senere
+    </div>
+    <div v-else>
       <div v-for="index in 6" :key="index" class="controlschemes">
         <h3>B{{ index }}</h3>
         <div class="container">
@@ -8,12 +13,12 @@
             <thead>
               <tr class="blue-header">
                 <th class="min-width">Nr.:</th>
-                <th>Kontrol af</th>
-                <th>Tidspunkt</th>
-                <th>Acceptkriterium</th>
-                <th>Kontrolomfang</th>
-                <th>Kontrolmetode</th>
-                <th>Dokumentationsmetode</th>
+                <th class="no-wrap">Kontrol af</th>
+                <th class="no-wrap">Tidspunkt</th>
+                <th class="no-wrap">Acceptkriterium</th>
+                <th class="no-wrap">Kontrolomfang</th>
+                <th class="no-wrap">Kontrolmetode</th>
+                <th class="no-wrap">Dokumentationsmetode</th>
                 <th class="fixed blue-header">Kontrolresultat</th>
                 <th class="fixed2 blue-header">Godkendt dato & init.</th>
               </tr>
@@ -22,45 +27,45 @@
               <!-- laver en row for hver række der er i header1 -->
               <tr
                 class="tr"
-                v-for="(value, key) in this.templateTexts['B' + index][
+                v-for="(value, key) in this.leftFormData['B' + index][
                   'Header 1'
                 ]"
                 :key="key"
               >
                 <td>
                   <p class="no-wrap">
-                    {{ templateTexts["B" + index]["Header 1"][key] }}
+                    {{ leftFormData["B" + index]["Header 1"][key] }}
                   </p>
                 </td>
                 <td>
                   <p class="no-wrap">
-                    {{ templateTexts["B" + index]["Header 2"][key] }}
+                    {{ leftFormData["B" + index]["Header 2"][key] }}
                   </p>
                 </td>
                 <!--  -->
                 <td>
                   <p class="no-wrap">
-                    {{ templateTexts["B" + index]["Header 3"][key] }}
+                    {{ leftFormData["B" + index]["Header 3"][key] }}
                   </p>
                 </td>
                 <td>
                   <p class="no-wrap">
-                    {{ templateTexts["B" + index]["Header 4"][key] }}
+                    {{ leftFormData["B" + index]["Header 4"][key] }}
                   </p>
                 </td>
                 <td>
                   <p class="no-wrap">
-                    {{ templateTexts["B" + index]["Header 5"][key] }}
+                    {{ leftFormData["B" + index]["Header 5"][key] }}
                   </p>
                 </td>
                 <td>
                   <p class="no-wrap">
-                    {{ templateTexts["B" + index]["Header 6"][key] }}
+                    {{ leftFormData["B" + index]["Header 6"][key] }}
                   </p>
                 </td>
                 <td>
                   <p class="no-wrap">
-                    {{ templateTexts["B" + index]["Header 7"][key] }}
+                    {{ leftFormData["B" + index]["Header 7"][key] }}
                   </p>
                 </td>
                 <td class="fixedtd">
@@ -76,56 +81,14 @@
       </div>
       <!-- --------------------oversigt slut ------------------------->
 
-      <!-- <div v-for="key in this.formData.checkBoxValues" :key="key"> -->
-      <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
-      <!-- for hver checkbox der er sat flueben i -->
-      <table class="kontrolplan-tables">
-        <tbody>
-          <!-- KONTROLPLAN First table content (second table er blandet ind, ) -->
-        </tbody>
-      </table>
+      <div class="margin20">
+        <v-btn color="primary" @click="saveSubmittedData()">Indsend</v-btn>
+      </div>
     </div>
-
-    <div class="margin20">
-      <v-btn color="primary" @click="saveSubmittedData()">Indsend</v-btn>
-    </div>
-    <!-- @click="designSaveResult" -->
-    <!-- <div class="notification">Data indsendt!</div> -->
-    <!-- v-if="showNotification" -->
-    <!-- </div> -->
   </v-container>
 </template>
 
 <style scoped>
-.width100 {
-  width: 100%;
-}
-.template-input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  background-color: white;
-}
-.controlschemes h3 {
-  margin-bottom: 2px;
-}
-.controlschemes + .controlschemes {
-  margin-top: 50px;
-}
-
-.add-row-container {
-  margin-top: -20px; /* Adjust as needed */
-  margin-left: 3px;
-}
-.custom-icon-btn {
-  min-width: 0; /* Ensures the button doesn't expand */
-  border-radius: 0; /* Makes the button square */
-}
-.custom-col {
-  margin-right: 0px; /* Adjust the margin as needed */
-}
-
 .container {
   overflow-x: scroll;
   margin-right: 600px;
@@ -174,7 +137,6 @@
 <script>
 ///////////////////////////////////////////////////////////////////// script ////////////////////////////////////////////////////////////////////////////////
 // @ is an alias to /src
-import { templateTexts } from "@/components/templateTexts.js";
 import { updateProjectStatus } from "@/components/utils.js";
 
 import { collection, addDoc, getDocs, getDoc, doc } from "firebase/firestore";
@@ -189,123 +151,50 @@ export default {
 
   data() {
     return {
-      selectedOption: "Beton: Armerede fundamenter",
-      alltemplates: templateTexts,
-      templateTexts: null, // opdateres i updateTemplatetexts som køres ved created
-      selectedValue: null,
-      isAddingProject: false, // Flag to show/hide the input field
-      newTemplateName: null,
+      leftFormData: null,
+      rightFormData: {}, // blir gemt...
+      loading: true,
+      formData: {
+        // Assuming 'Header 8' and 'Header 9' need nested objects
+        B1: "jek",
+        B2: "med",
+        B3: "dig",
+        B4: "",
+        B5: "",
+        B6: "",
+      },
     };
   },
 
   created() {
-    // this.fetchProjectName();
-    this.fetchTemplates();
-    this.updateTemplateTexts();
+    this.fetchLeftAndRightTexts();
   },
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
-    updateTemplateTexts() {
-      this.templateTexts = templateTexts[this.selectedOption];
-    },
-
-    createLink() {
-      //--
-      if (this.isAddingProject) {
-        if (!this.newTemplateName) {
-          alert("Du mangler at give skabelonen et navn");
-          return;
-        } else {
-          this.saveTemplate();
-          console.log("template saved: " + this.newTemplateName);
-        }
-      }
-      // ovenstående skal ikke gøre noget, det er kun for at gemme templates...
-      // her skal jeg gemme en masse data måske i en ny collection, måske i project, måske HVAD jeg er træt
-
-      const newId = this.parameter;
-      this.$router.push(`/form/${newId}`);
-      // her skal være logik for at gå til næste side...
-    },
-
-    startAddingTemplate() {
-      // bare til at vise navneinput
-      this.isAddingProject = true;
-    },
-
-    // -------------------- add row ---------------
-    addRow(index) {
-      let numberOfHeaders = Object.keys(this.templateTexts["B" + index]).length;
-
-      let keys = Object.keys(this.templateTexts["B" + index]["Header 6"]);
-      let lastKey = parseInt(keys[keys.length - 1]) || 0;
-
-      // for each header, set an empty property called 4 (if lastKey is 3) and set the value to "" so it will be {4:""}
-      for (
-        let headernumber = 1;
-        headernumber <= numberOfHeaders;
-        headernumber++
-      ) {
-        this.templateTexts["B" + index]["Header " + headernumber][lastKey + 1] =
-          "";
-      }
-
-      console.log(this.templateTexts["B" + index]);
-    },
-
-    // -------------removeRow-----------------
-    removeRow(index, rowNumber) {
-      let numberOfHeaders = Object.keys(this.templateTexts["B" + index]).length;
-
-      for (
-        let headernumber = 1;
-        headernumber <= numberOfHeaders;
-        headernumber++
-      ) {
-        delete this.templateTexts["B" + index]["Header " + headernumber][
-          rowNumber
-        ];
-      }
-    },
-
-    async saveTemplate() {
-      const colRef = collection(db, "templates");
-
-      const dataObj = {
-        accountId: null,
-        templateName: this.newTemplateName,
-        templateObject: this.templateTexts,
-      };
-      const docRef = await addDoc(colRef, dataObj);
-      console.log("project was created with ID: ", docRef.id); // DET HER SKAL JEG BRUGE
-    },
-
-    // async OpenLink(subpage) {
-    //   this.linkCreated = `/${subpage}/${this.projectData.designDocId}`;
-
-    //   window.open(this.linkCreated, "_blank");
-    // },
-
-    //----------------------------------------------------------
-
-    async fetchTemplates() {
-      const collectionRef = collection(db, "templates");
+    async fetchLeftAndRightTexts() {
+      // sørg for at have styr på hvad der skal ske hvis den er undefinded.
+      const docRef = doc(db, "controlSchemes", this.parameter);
 
       try {
-        const querySnapshot = await getDocs(collectionRef);
+        const docSnapshot = await getDoc(docRef);
 
-        querySnapshot.forEach((docSnapshot) => {
-          if (docSnapshot.exists()) {
-            const data = docSnapshot.data();
-            this.alltemplates[data.templateName] = data.templateObject;
-          }
-        });
+        if (docSnapshot.exists()) {
+          const docData = docSnapshot.data();
 
-        // templatesList.sort((a, b) => b.date - a.date); // Reverse the order
+          this.leftFormData = docData.controlSchemeTexts;
+          //KU OS VÆRE RELEVANT MED CONTROLSCHEMENAME OG NUMBER... OG så vise det i en h3
+          this.rightFormData = docData.rightFormTexts
+            ? docData.rightFormTexts
+            : {};
+        }
       } catch (error) {
-        console.error("Error fetching documents:", error);
+        console.error("Error fetching document... ", error);
+      } finally {
+        this.loading = false;
       }
     },
+
+    //----------------------------------------------------------
   },
 };
 </script>
