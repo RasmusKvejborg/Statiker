@@ -170,6 +170,8 @@ export default {
     // -- end of save control scheme end ---
 
     async fetchControlSchemes() {
+      console.log("this happens");
+
       const collectionRef = collection(db, "controlSchemes");
 
       try {

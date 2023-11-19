@@ -219,11 +219,10 @@ export default {
         }
       }
 
-      // this.addObjectToControlScheme();
+      this.addObjectToControlScheme();
       // create an alert here and dont go to the routing before you've pressed OK to the alert
-      alert("hdfjasf");
-      // const newId = this.parameter;
-      // this.$router.push(`/form/${newId}`);
+      const newId = this.parameter;
+      this.$router.push(`/form/${newId}`);
     },
 
     //------ update controlschemes -----
