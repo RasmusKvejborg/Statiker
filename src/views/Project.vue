@@ -1,6 +1,25 @@
 <template>
   <v-container fluid>
-    <h2>{{ this.projectNumber + " - " + this.projectName }}</h2>
+    <h2 @click="togglePopup()">
+      {{ this.projectNumber + " - " + this.projectName }}
+    </h2>
+
+    <!-- ----------------------------------------- -->
+    <div class="popup" id="popup-1">
+      <div class="overlay" @click="togglePopup()">
+        <div class="content" @click.stop>
+          <div class="close-btn" @click="togglePopup()">&times;</div>
+          <h3>Del linket med dem, der skal udfylde kontrolskemaet</h3>
+          <br />
+          <p>
+            {{ modalLink }}
+          </p>
+          <v-btn color="primary" @click="copyToClipboard">Kopiér link</v-btn>
+          <!-- her kommer copy paste halløj. -->
+        </div>
+      </div>
+    </div>
+    <!--  --------------------------------------------->
 
     <div>
       <v-select
@@ -42,39 +61,52 @@
               </td>
               <td>
                 <input
-                  class="invisible-input"
+                  class="invisible-input width100"
                   v-model="currentTexts['B' + index]['Header 2'][key]"
                 />
               </td>
               <!--  -->
               <td>
                 <input
-                  id="autocompleteInput"
-                  class="invisible-input"
+                  class="invisible-input width100"
+                  :list="
+                    index === 1
+                      ? 'tidspunkt-b1'
+                      : index === 6
+                      ? 'tidspunkt-b6'
+                      : ''
+                  "
                   v-model="currentTexts['B' + index]['Header 3'][key]"
                 />
+
+                <datalist id="tidspunkt-b1">
+                  <option value="Inden produktion."></option>
+                </datalist>
+                <datalist id="tidspunkt-b6">
+                  <option value="Ved afslutning af kontrolafsnittet."></option>
+                </datalist>
               </td>
               <td>
                 <input
-                  class="invisible-input"
+                  class="invisible-input width100"
                   v-model="currentTexts['B' + index]['Header 4'][key]"
                 />
               </td>
               <td>
                 <input
-                  class="invisible-input"
+                  class="invisible-input width100"
                   v-model="currentTexts['B' + index]['Header 5'][key]"
                 />
               </td>
               <td>
                 <input
-                  class="invisible-input"
+                  class="invisible-input width100"
                   v-model="currentTexts['B' + index]['Header 6'][key]"
                 />
               </td>
               <td>
                 <input
-                  class="invisible-input"
+                  class="invisible-input width100"
                   v-model="currentTexts['B' + index]['Header 7'][key]"
                 />
               </td>
@@ -111,7 +143,7 @@
     <div class="margin20">
       <v-row>
         <v-col>
-          <v-btn color="primary" @click="createLink()">Få link</v-btn>
+          <v-btn color="primary" @click="createLink(id)">Få link</v-btn>
         </v-col>
         <v-col v-if="isAddingProject">
           <input
@@ -194,6 +226,7 @@ export default {
       selectedValue: null,
       isAddingProject: false, // Flag to show/hide the input field
       newTemplateName: null,
+      modalLink: "",
     };
   },
 
@@ -203,9 +236,35 @@ export default {
   },
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
+    copyToClipboard() {
+      navigator.clipboard
+        .writeText(this.modalLink)
+        .then(() => {
+          // Success message or further actions on successful copy
+          alert("Link kopieret!");
+        })
+        .catch((error) => {
+          // Handling error if the copy operation fails
+          console.error("Copy failed:", error);
+          // You can also provide an alternative method here if the Clipboard API is not available
+        });
+    },
+
     setCurrentText() {
       // her ku jeg måske sige indsæt fetched templatetexts hvis der er nogle, ellers vil den gå derind:
       this.currentTexts = templateTextsFromFile[this.selectedOption];
+    },
+
+    togglePopup() {
+      console.log("closing or SAFS");
+      document.getElementById("popup-1").classList.toggle("active");
+      this.$router.push(`/form/${this.parameter}`);
+    },
+
+    togglePopup(id) {
+      console.log("Opening With ID");
+      this.modalLink = `http://localhost:8081/form/${id}`;
+      document.getElementById("popup-1").classList.toggle("active");
     },
 
     async createLink() {
@@ -220,9 +279,10 @@ export default {
       }
 
       this.addObjectToControlScheme();
+
+      this.togglePopup(this.parameter);
       // create an alert here and dont go to the routing before you've pressed OK to the alert
-      const newId = this.parameter;
-      this.$router.push(`/form/${newId}`);
+      // this.$router.push(`/form/${newId}`);
     },
 
     //------ update controlschemes -----

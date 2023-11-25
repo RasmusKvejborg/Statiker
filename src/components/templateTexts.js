@@ -12,9 +12,9 @@ export const templateTexts = {
         3: "Text for Header 2, 3",
       },
       "Header 3": {
-        1: "Text for Header 3, 1",
-        2: "Text for Header 3, 2",
-        3: "Text for Header 3, 3",
+        1: "",
+        2: "",
+        3: "",
       },
       "Header 4": {
         1: "Text for Header 4, 1",
@@ -197,9 +197,9 @@ export const templateTexts = {
         3: "Text for Header 2, 3",
       },
       "Header 3": {
-        1: "Text for Header 3, 1",
-        2: "Text for Header 3, 2",
-        3: "Text for Header 3, 3",
+        1: "",
+        2: "",
+        3: "",
       },
       "Header 4": {
         1: "Text for Header 4, 1",

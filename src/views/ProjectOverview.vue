@@ -2,9 +2,21 @@
   <v-container fluid>
     <h2>{{ this.projectNumber + " - " + this.projectName }}</h2>
 
-    <!-- <div class="project-container" @click="navigateToControlScheme(project)">
-      Nyt kontrolskema
-    </div> -->
+    <!-- ------------------modal----------------------- -->
+    <div class="popup" id="popup-1">
+      <div class="overlay" @click="togglePopup()">
+        <div class="content" @click.stop>
+          <div class="close-btn" @click="togglePopup()">&times;</div>
+          <h3>Del linket med dem, der skal udfylde kontrolskemaet</h3>
+          <br />
+          <p>
+            {{ modalLink }}
+          </p>
+          <v-btn color="primary" @click="copyToClipboard">Kopiér link</v-btn>
+        </div>
+      </div>
+    </div>
+    <!--  --------------------------------------------->
 
     <div>
       <div class="margin20topbot">
@@ -56,13 +68,15 @@
           <v-col cols="1"> </v-col>
         </v-row>
 
-        <!--         v-for="(project, index) in projects"
-        :key="index" -->
         <div
           v-for="(controlScheme, index) in controlSchemes"
           :key="index"
           class="project-container"
-          @click="navigateToForm(controlScheme.id)"
+          @click="
+            controlScheme.controlSchemeTexts
+              ? navigateToForm(controlScheme.id)
+              : navigateToProject(controlScheme.id)
+          "
         >
           <v-row>
             <v-col cols="3">
@@ -84,7 +98,9 @@
               controlScheme.date && formatDate(controlScheme.date)
             }}</v-col>
 
-            <v-col cols="1"> Link?</v-col>
+            <v-col @click.stop @click="togglePopup(controlScheme.id)" cols="1">
+              <button v-if="controlScheme.controlSchemeTexts">Del link</button>
+            </v-col>
           </v-row>
         </div>
       </div>
@@ -106,7 +122,7 @@ import { formatDate } from "../components/utils.js";
 
 export default {
   props: {
-    parameter: String,
+    parameter: String, // project id
     projectName: String,
     projectNumber: String,
   },
@@ -117,10 +133,36 @@ export default {
       newControlName: "", //controlSchemeName
       newControlNumber: "",
       controlSchemes: {},
+      modalLink: "",
     };
   },
 
   methods: {
+    copyToClipboard() {
+      navigator.clipboard
+        .writeText(this.modalLink)
+        .then(() => {
+          // Success message or further actions on successful copy
+          alert("Link kopieret!");
+        })
+        .catch((error) => {
+          // Handling error if the copy operation fails
+          console.error("Copy failed:", error);
+          // You can also provide an alternative method here if the Clipboard API is not available
+        });
+    },
+
+    togglePopup() {
+      console.log("closing or opening");
+      document.getElementById("popup-1").classList.toggle("active");
+    },
+
+    togglePopup(id) {
+      this.modalLink = `http://localhost:8081/form/${id}`;
+      console.log("closing or opening");
+      document.getElementById("popup-1").classList.toggle("active");
+    },
+
     startAddingControlScheme() {
       // bare til at vise navneinput
       this.isAddingControl = true;
@@ -192,6 +234,9 @@ export default {
                 controlSchemeNumber: data.controlSchemeNumber
                   ? data.controlSchemeNumber
                   : null,
+                controlSchemeTexts: data.controlSchemeTexts
+                  ? data.controlSchemeTexts
+                  : null,
                 date: data.date ? data.date.toDate() : null, // Convert to Date object
               };
               controlSchemesList.push(controlScheme);
@@ -217,7 +262,7 @@ export default {
       this.$router.push({
         name: "project",
         params: {
-          parameter: controlSchemeId, // this.projectId,
+          parameter: controlSchemeId,
           projectName: this.projectNumber,
           projectNumber: this.projectName,
         },
@@ -225,8 +270,22 @@ export default {
     },
 
     navigateToForm(controlSchemeId) {
-      this.linkCreated = `/form/${controlSchemeId}`;
-      window.open(this.linkCreated, "_blank");
+      // this.linkCreated = `/form/${controlSchemeId}`;
+      // window.open(this.linkCreated, "_blank");
+      this.$router.push({
+        name: "form",
+        params: { parameter: controlSchemeId },
+      });
+    },
+    navigateToProject(controlSchemeId) {
+      this.$router.push({
+        name: "project",
+        params: {
+          parameter: controlSchemeId,
+          projectNumber: this.projectNumber,
+          projectName: this.projectName,
+        },
+      });
     },
   },
   created() {

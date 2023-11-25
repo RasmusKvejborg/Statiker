@@ -141,6 +141,14 @@ table tbody tr:nth-child(even) {
   outline: none; /* Remove the outline when focused */
 }
 
+.invisible-input::-webkit-calendar-picker-indicator {
+  display: none !important;
+}
+
+.width100 {
+  width: 100%;
+}
+
 .delete {
   background-color: rgb(140, 0, 0);
 }
@@ -159,4 +167,56 @@ table tbody tr:nth-child(even) {
 
 .margin-20 {
   margin-top: -10px; /* Adjust the margin as needed */
+}
+
+.popup .overlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1;
+  display: none;
+}
+
+.popup .content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  background: #fff;
+  width: 450px;
+  height: 220px;
+  z-index: 2;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.popup .close-btn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  width: 30px;
+  height: 30px;
+  background: #222;
+  font-size: 21px;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.popup .close-btn:hover {
+  background: #444; /* Change background color on hover */
+}
+
+.popup.active .overlay {
+  display: block;
+}
+
+.popup.active .content {
+  transition: all 300ms ease-in-out;
+  transform: translate(-50%, -50%) scale(1);
 }
