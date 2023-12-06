@@ -452,9 +452,9 @@ export const templateTexts = {
   "Tom skabelon": {
     B1: {
       "Header 1": {
-        1: "",
-        2: "",
-        3: "",
+        1: "1",
+        2: "2",
+        3: "3",
       },
       "Header 2": {
         1: "",
@@ -489,9 +489,9 @@ export const templateTexts = {
     },
     B2: {
       "Header 1": {
-        1: "",
-        2: "",
-        3: "",
+        1: "1",
+        2: "2",
+        3: "3",
       },
       "Header 2": {
         1: "",
@@ -526,9 +526,9 @@ export const templateTexts = {
     },
     B3: {
       "Header 1": {
-        1: "",
-        2: "",
-        3: "",
+        1: "1",
+        2: "2",
+        3: "3",
       },
       "Header 2": {
         1: "",
@@ -563,9 +563,9 @@ export const templateTexts = {
     },
     B4: {
       "Header 1": {
-        1: "",
-        2: "",
-        3: "",
+        1: "1",
+        2: "2",
+        3: "3",
       },
       "Header 2": {
         1: "",
@@ -600,9 +600,9 @@ export const templateTexts = {
     },
     B5: {
       "Header 1": {
-        1: "",
-        2: "",
-        3: "",
+        1: "1",
+        2: "2",
+        3: "3",
       },
       "Header 2": {
         1: "",
@@ -637,9 +637,9 @@ export const templateTexts = {
     },
     B6: {
       "Header 1": {
-        1: "",
-        2: "",
-        3: "",
+        1: "1",
+        2: "2",
+        3: "3",
       },
       "Header 2": {
         1: "",

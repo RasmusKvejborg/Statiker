@@ -220,7 +220,7 @@ export default {
 
   data() {
     return {
-      selectedOption: "Beton: Armerede fundamenter",
+      selectedOption: "Tom skabelon",
       alltemplates: templateTextsFromFile,
       currentTexts: null, // opdateres i updateTemplatetexts som køres ved created
       selectedValue: null,
