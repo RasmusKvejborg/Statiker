@@ -1,4 +1,6 @@
 <template>
+  <!-- <p>{{ alltemplates }}</p> -->
+
   <v-container fluid>
     <h2 @click="togglePopup()">
       {{ this.projectNumber + " - " + this.projectName }}
@@ -16,6 +18,7 @@
           </p>
           <v-btn color="primary" @click="copyToClipboard">Kopiér link</v-btn>
           <!-- her kommer copy paste halløj. -->
+          <p>{{ hiddenMessage }}</p>
         </div>
       </div>
     </div>
@@ -208,6 +211,8 @@ import {
   getDoc,
   doc,
   setDoc,
+  where,
+  query,
 } from "firebase/firestore";
 import { db } from "../firebase.js";
 
@@ -216,6 +221,7 @@ export default {
     parameter: String, //parameter er i dette tilfælde controlSchemeId
     projectName: String,
     projectNumber: String,
+    userId: String,
   },
 
   data() {
@@ -227,11 +233,12 @@ export default {
       isAddingProject: false, // Flag to show/hide the input field
       newTemplateName: null,
       modalLink: "",
+      hiddenMessage: "",
     };
   },
 
   created() {
-    this.fetchTemplates();
+    // this.fetchTemplates(); bliver kaldt i watch, når der er et userId
     this.setCurrentText();
   },
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
@@ -241,7 +248,7 @@ export default {
         .writeText(this.modalLink)
         .then(() => {
           // Success message or further actions on successful copy
-          alert("Link kopieret!");
+          this.hiddenMessage = "Link kopieret!";
         })
         .catch((error) => {
           // Handling error if the copy operation fails
@@ -345,7 +352,7 @@ export default {
       const colRef = collection(db, "templates");
 
       const dataObj = {
-        accountId: null,
+        accountId: this.userId,
         templateName: this.newTemplateName,
         templateObject: this.currentTexts,
       };
@@ -353,19 +360,17 @@ export default {
       console.log("project was created with ID: ", docRef.id); // DET HER SKAL JEG BRUGE
     },
 
-    // async OpenLink(subpage) {
-    //   this.linkCreated = `/${subpage}/${this.projectData.designDocId}`;
-
-    //   window.open(this.linkCreated, "_blank");
-    // },
-
     //----------------------------------------------------------
 
     async fetchTemplates() {
+      console.log("user!!!: " + this.userId);
+
       const collectionRef = collection(db, "templates");
 
       try {
-        const querySnapshot = await getDocs(collectionRef);
+        const querySnapshot = await getDocs(
+          query(collectionRef, where("accountId", "==", this.userId))
+        );
 
         querySnapshot.forEach((docSnapshot) => {
           if (docSnapshot.exists()) {
@@ -373,11 +378,20 @@ export default {
             this.alltemplates[data.templateName] = data.templateObject;
           }
         });
-
-        // templatesList.sort((a, b) => b.date - a.date); // Reverse the order
       } catch (error) {
         console.error("Error fetching documents:", error);
       }
+    },
+  },
+
+  watch: {
+    userId: {
+      immediate: true, // Run on initial mount
+      handler(newVal) {
+        if (newVal) {
+          this.fetchTemplates();
+        }
+      },
     },
   },
 };

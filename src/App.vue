@@ -21,20 +21,25 @@
       <v-btn v-else @click="navigateToLogin" flat color="grey">Log ind</v-btn>
     </v-toolbar>
   </nav>
-  <router-view />
+  <!-- DET ER DENNE DER SENDER USERID VIDERE -->
+  <router-view :userId="userId" />
 </template>
 
 <style src="./style.css" />
 
 <script>
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import Home from "./views/Home.vue";
 
 let auth;
 
 export default {
+  components: { Home },
+
   data() {
     return {
       isLoggedIn: false,
+      userId: null,
     };
   },
 
@@ -45,7 +50,7 @@ export default {
   methods: {
     logout() {
       signOut(auth).then(() => {
-        this.$router.push("/"); // bør nok ikke gå til homepage medmindre jeg har et tjek på at den redirecter dertil hvis man ikke er logget ind.
+        this.$router.push("/login");
       });
     },
 
@@ -53,8 +58,9 @@ export default {
       auth = getAuth();
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          console.log("logged in..");
+          console.log("logged in.."); // how do I print the user Id?
           this.isLoggedIn = true;
+          this.userId = user.uid;
         } else {
           console.log("NOT logged in...");
           this.isLoggedIn = false;

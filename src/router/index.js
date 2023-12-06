@@ -13,6 +13,10 @@ const routes = [
     path: "/",
     name: "home",
     component: Home,
+    props: (route) => ({ userId: route.params.userId }),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/project/:parameter/:projectNumber/:projectName",
@@ -68,12 +72,11 @@ const getCurrentUser = () => {
 
 router.beforeEach(async (to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    console.log("current user: " + getAuth().currentUser);
     if (await getCurrentUser()) {
       next();
     } else {
       alert("Log ind for at få adgang til denne side");
-      next("/");
+      next("/login");
     }
   } else {
     next();

@@ -77,10 +77,15 @@ import {
   querym,
   doc,
   getDoc,
+  query,
+  where,
 } from "firebase/firestore";
 import { formatDate } from "../components/utils.js";
 
 export default {
+  props: {
+    userId: String,
+  },
   data() {
     return {
       projects: null,
@@ -107,7 +112,7 @@ export default {
       const colRef = collection(db, "projects");
 
       const dataObj = {
-        accountId: null,
+        accountId: this.userId,
         projectName: this.newProjectName,
         projectNumber: this.newProjectNumber,
         date: new Date(),
@@ -130,10 +135,13 @@ export default {
     },
 
     async fetchData() {
+      console.log("user: " + this.userId);
       const collectionRef = collection(db, "projects");
 
       try {
-        const querySnapshot = await getDocs(collectionRef);
+        const querySnapshot = await getDocs(
+          query(collectionRef, where("accountId", "==", this.userId))
+        );
 
         const projectList = [];
 
@@ -174,8 +182,15 @@ export default {
     },
   }, // -----end of methods-----
 
-  created() {
-    this.fetchData();
+  watch: {
+    userId: {
+      immediate: true, // Run on initial mount
+      handler(newVal) {
+        if (newVal) {
+          this.fetchData();
+        }
+      },
+    },
   },
 };
 </script>
