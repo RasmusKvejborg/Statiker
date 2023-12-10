@@ -1,8 +1,8 @@
 <template>
-  <!-- <p>{{ alltemplates }}</p> -->
+  <p>{{ currentTexts }}</p>
 
   <v-container fluid>
-    <h2 @click="togglePopup()">
+    <h2>
       {{ this.projectNumber + " - " + this.projectName }}
     </h2>
 
@@ -58,20 +58,20 @@
             >
               <td>
                 <input
-                  class="invisible-input min-width"
+                  class="invisible-input min-width no-margin"
                   v-model="currentTexts['B' + index]['Header 1'][key]"
                 />
               </td>
               <td>
                 <input
-                  class="invisible-input width100"
+                  class="invisible-input width100 needs-padding"
                   v-model="currentTexts['B' + index]['Header 2'][key]"
                 />
               </td>
               <!--  -->
               <td>
                 <input
-                  class="invisible-input width100"
+                  class="invisible-input width100 needs-padding"
                   :list="
                     index === 1
                       ? 'tidspunkt-b1'
@@ -91,25 +91,25 @@
               </td>
               <td>
                 <input
-                  class="invisible-input width100"
+                  class="invisible-input width100 needs-padding"
                   v-model="currentTexts['B' + index]['Header 4'][key]"
                 />
               </td>
               <td>
                 <input
-                  class="invisible-input width100"
+                  class="invisible-input width100 needs-padding"
                   v-model="currentTexts['B' + index]['Header 5'][key]"
                 />
               </td>
               <td>
                 <input
-                  class="invisible-input width100"
+                  class="invisible-input width100 needs-padding"
                   v-model="currentTexts['B' + index]['Header 6'][key]"
                 />
               </td>
               <td>
                 <input
-                  class="invisible-input width100"
+                  class="invisible-input width100 needs-padding"
                   v-model="currentTexts['B' + index]['Header 7'][key]"
                 />
               </td>
@@ -118,7 +118,7 @@
                   @click="removeRow(index, key)"
                   icon
                   size="extra small"
-                  class="custom-icon-btn"
+                  class="custom-icon-btn margin8"
                   color="red"
                 >
                   <v-icon>mdi-close</v-icon>
@@ -128,7 +128,7 @@
           </tbody>
         </v-table>
 
-        <div class="add-row-container">
+        <div class="add-row-container needs-padding">
           <v-btn
             @click="addRow(index)"
             icon
@@ -148,7 +148,7 @@
         <v-col>
           <v-btn color="primary" @click="createLink(id)">Få link</v-btn>
         </v-col>
-        <v-col v-if="isAddingProject">
+        <v-col v-if="isAddingTemplate">
           <input
             v-model="newTemplateName"
             placeholder="Skabelon-navn"
@@ -158,7 +158,7 @@
         <v-col>
           <v-checkbox
             class="margin-20"
-            v-model="isAddingProject"
+            v-model="isAddingTemplate"
             label="Gem ny skabelon til fremtidig brug"
           ></v-checkbox>
         </v-col>
@@ -196,6 +196,18 @@
 .margin-20 {
   margin-top: -10px; /* Adjust the margin as needed */
 }
+
+.v-table__wrapper table td {
+  padding: 0 !important;
+}
+
+.needs-padding {
+  padding: 8px !important; /* Adjust as needed */
+}
+
+.margin8 {
+  margin: 8px;
+}
 </style>
 
 <script>
@@ -226,11 +238,11 @@ export default {
 
   data() {
     return {
-      selectedOption: "Tom skabelon",
+      selectedOption: "Tom skabelon", // "Beton: Fiberarmerede",
       alltemplates: templateTextsFromFile,
       currentTexts: null, // opdateres i updateTemplatetexts som køres ved created
       selectedValue: null,
-      isAddingProject: false, // Flag to show/hide the input field
+      isAddingTemplate: false, // Flag to show/hide the input field
       newTemplateName: null,
       modalLink: "",
       hiddenMessage: "",
@@ -275,7 +287,7 @@ export default {
     },
 
     async createLink() {
-      if (this.isAddingProject) {
+      if (this.isAddingTemplate) {
         if (!this.newTemplateName) {
           alert("Du mangler at give skabelonen et navn");
           return;
@@ -312,7 +324,7 @@ export default {
 
     startAddingTemplate() {
       // bare til at vise navneinput
-      this.isAddingProject = true;
+      this.isAddingTemplate = true;
     },
 
     // -------------------- add row ---------------
@@ -363,8 +375,6 @@ export default {
     //----------------------------------------------------------
 
     async fetchTemplates() {
-      console.log("user!!!: " + this.userId);
-
       const collectionRef = collection(db, "templates");
 
       try {
@@ -375,6 +385,8 @@ export default {
         querySnapshot.forEach((docSnapshot) => {
           if (docSnapshot.exists()) {
             const data = docSnapshot.data();
+            console.log(this.alltemplates);
+
             this.alltemplates[data.templateName] = data.templateObject;
           }
         });

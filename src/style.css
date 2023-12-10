@@ -38,7 +38,7 @@ th {
 }
 td {
   border: 1px solid var(--headlinebackground);
-  padding-inline: 4px;
+  padding-inline: 8px;
 }
 
 button + button {
@@ -85,7 +85,8 @@ table tbody tr:nth-child(even) {
 }
 
 .min-width {
-  width: 10px;
+  width: 57px;
+  padding-left: 6px;
 }
 
 .project-headlines {

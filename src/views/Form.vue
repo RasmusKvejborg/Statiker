@@ -8,6 +8,8 @@
     <div v-else>
       <div v-for="index in 6" :key="index" class="controlschemes">
         <h3>B{{ index }}</h3>
+
+        <p>{{ rightFormData }}</p>
         <div class="container">
           <table>
             <thead>
@@ -82,7 +84,7 @@
       <!-- --------------------oversigt slut ------------------------->
 
       <div class="margin20">
-        <v-btn color="primary" @click="saveSubmittedData()">Indsend</v-btn>
+        <v-btn color="primary" @click="saveSubmittedData">Indsend</v-btn>
       </div>
     </div>
   </v-container>
@@ -171,6 +173,10 @@ export default {
   },
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
+    saveSubmittedData() {
+      console.log("saved!!" + this.rightFormData);
+    },
+
     async fetchLeftAndRightTexts() {
       // sørg for at have styr på hvad der skal ske hvis den er undefinded.
       const docRef = doc(db, "controlSchemes", this.parameter);
