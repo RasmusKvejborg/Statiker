@@ -1,6 +1,4 @@
 <template>
-  <p>{{ currentTexts }}</p>
-
   <v-container fluid>
     <h2>
       {{ this.projectNumber + " - " + this.projectName }}
@@ -165,10 +163,6 @@
         <v-spacer></v-spacer>
       </v-row>
     </div>
-    <!-- @click="designSaveResult" -->
-    <!-- <div class="notification">Data indsendt!</div> -->
-    <!-- v-if="showNotification" -->
-    <!-- </div> -->
   </v-container>
 </template>
 
@@ -274,14 +268,14 @@ export default {
       this.currentTexts = templateTextsFromFile[this.selectedOption];
     },
 
-    togglePopup() {
-      console.log("closing or SAFS");
-      document.getElementById("popup-1").classList.toggle("active");
-      this.$router.push(`/form/${this.parameter}`);
-    },
+    // togglePopup() {
+    //   (this.hiddenMessage = ""), console.log("closing or SAFS");
+    //   document.getElementById("popup-1").classList.toggle("active");
+    //   this.$router.push(`/form/${this.parameter}`);
+    // },
 
     togglePopup(id) {
-      console.log("Opening With ID");
+      (this.hiddenMessage = ""), console.log("Opening With ID");
       this.modalLink = `http://localhost:8081/form/${id}`;
       document.getElementById("popup-1").classList.toggle("active");
     },
@@ -300,13 +294,10 @@ export default {
       this.addObjectToControlScheme();
 
       this.togglePopup(this.parameter);
-      // create an alert here and dont go to the routing before you've pressed OK to the alert
-      // this.$router.push(`/form/${newId}`);
     },
 
     //------ update controlschemes -----
     async addObjectToControlScheme() {
-      console.log("den har nu et object");
       const controlSchemeRef = doc(db, "controlSchemes", this.parameter); //parameter er i dette tilfælde controlSchemeId
 
       try {

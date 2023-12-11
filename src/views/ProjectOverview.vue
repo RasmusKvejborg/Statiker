@@ -13,6 +13,7 @@
             {{ modalLink }}
           </p>
           <v-btn color="primary" @click="copyToClipboard">Kopiér link</v-btn>
+          <p>{{ hiddenMessage }}</p>
         </div>
       </div>
     </div>
@@ -49,59 +50,75 @@
       </div>
 
       <!-- skal kun vises hvis der er kontrolskemaer. -->
-      <div v-if="Object.keys(controlSchemes).length > 0">
-        <v-row class="project-headlines">
-          <v-col cols="3">
-            <h4>Kontrolskema navn</h4>
-          </v-col>
-          <v-col cols="3">
-            <h4>Kontrolskema ID</h4>
-          </v-col>
-
-          <v-col cols="3">
-            <h4>Sidst ændret</h4>
-          </v-col>
-
-          <v-col cols="2">
-            <h4>Oprettet</h4>
-          </v-col>
-          <v-col cols="1"> </v-col>
-        </v-row>
-
-        <div
-          v-for="(controlScheme, index) in controlSchemes"
-          :key="index"
-          class="project-container"
-          @click="
-            controlScheme.controlSchemeTexts
-              ? navigateToForm(controlScheme.id)
-              : navigateToProject(controlScheme.id)
-          "
-        >
-          <v-row>
+      <div v-if="!controlSchemesLoaded">
+        <p>Henter fra databasen...</p>
+      </div>
+      <div v-else>
+        <div v-if="Object.keys(controlSchemes).length > 0">
+          <v-row class="project-headlines">
             <v-col cols="3">
-              {{
-                controlScheme.controlSchemeName &&
-                controlScheme.controlSchemeName
-              }}
+              <h4>Kontrolskema navn</h4>
+            </v-col>
+            <v-col cols="3">
+              <h4>Kontrolskema ID</h4>
             </v-col>
 
             <v-col cols="3">
-              {{
-                controlScheme.controlSchemeNumber &&
-                controlScheme.controlSchemeNumber
-              }}
+              <h4>Sidst ændret</h4>
             </v-col>
 
-            <v-col cols="3"></v-col>
-            <v-col cols="2">{{
-              controlScheme.date && formatDate(controlScheme.date)
-            }}</v-col>
-
-            <v-col @click.stop @click="togglePopup(controlScheme.id)" cols="1">
-              <button v-if="controlScheme.controlSchemeTexts">Del link</button>
+            <v-col cols="2">
+              <h4>Oprettet</h4>
             </v-col>
+            <v-col cols="1"> </v-col>
           </v-row>
+
+          <div
+            v-for="(controlScheme, index) in controlSchemes"
+            :key="index"
+            class="project-container"
+            @click="
+              controlScheme.controlSchemeTexts
+                ? navigateToForm(controlScheme.id)
+                : navigateToProject(controlScheme.id)
+            "
+          >
+            <v-row>
+              <v-col cols="3">
+                {{
+                  controlScheme.controlSchemeName &&
+                  controlScheme.controlSchemeName
+                }}
+              </v-col>
+
+              <v-col cols="3">
+                {{
+                  controlScheme.controlSchemeNumber &&
+                  controlScheme.controlSchemeNumber
+                }}
+              </v-col>
+
+              <v-col cols="3"></v-col>
+              <v-col cols="2">{{
+                controlScheme.date && formatDate(controlScheme.date)
+              }}</v-col>
+
+              <v-col
+                @click.stop
+                @click="togglePopup(controlScheme.id)"
+                cols="1"
+              >
+                <button v-if="controlScheme.controlSchemeTexts">
+                  Del link
+                </button>
+              </v-col>
+            </v-row>
+          </div>
+        </div>
+        <div v-else>
+          <p>
+            Der er ikke oprettet nogen kontrolskemaer endnu på dette projekt.
+          </p>
         </div>
       </div>
     </div>
@@ -125,6 +142,7 @@ export default {
     parameter: String, // project id
     projectName: String,
     projectNumber: String,
+    userId: String,
   },
 
   data() {
@@ -134,31 +152,36 @@ export default {
       newControlNumber: "",
       controlSchemes: {},
       modalLink: "",
+      controlSchemesLoaded: false,
+      hiddenMessage: "",
     };
   },
 
   methods: {
     copyToClipboard() {
-      navigator.clipboard
-        .writeText(this.modalLink)
-        .then(() => {
-          // Success message or further actions on successful copy
-          alert("Link kopieret!");
-        })
-        .catch((error) => {
-          // Handling error if the copy operation fails
-          console.error("Copy failed:", error);
-          // You can also provide an alternative method here if the Clipboard API is not available
-        });
+      (this.hiddenMessage = ""),
+        navigator.clipboard
+          .writeText(this.modalLink)
+          .then(() => {
+            // Success message or further actions on successful copy
+            this.hiddenMessage = "Link kopieret!";
+          })
+          .catch((error) => {
+            // Handling error if the copy operation fails
+            console.error("Copy failed:", error);
+            // You can also provide an alternative method here if the Clipboard API is not available
+          });
     },
 
-    togglePopup() {
-      console.log("closing or opening");
-      document.getElementById("popup-1").classList.toggle("active");
-    },
+    // togglePopup() {
+    //   this.hiddenMessage = "",
+    //   console.log("closing or opening");
+    //   document.getElementById("popup-1").classList.toggle("active");
+    // },
 
     togglePopup(id) {
-      this.modalLink = `http://localhost:8081/form/${id}`;
+      (this.hiddenMessage = ""),
+        (this.modalLink = `http://localhost:8081/form/${id}`);
       console.log("closing or opening");
       document.getElementById("popup-1").classList.toggle("active");
     },
@@ -167,11 +190,6 @@ export default {
       // bare til at vise navneinput
       this.isAddingControl = true;
       console.log(Object.keys(this.controlSchemes).length);
-    },
-
-    saveControlScheme() {
-      // her skal laves noget!!
-      this.cancelAddingControlScheme();
     },
 
     cancelAddingControlScheme() {
@@ -194,7 +212,7 @@ export default {
       const colRef = collection(db, "controlSchemes");
 
       const dataObj = {
-        accountId: null,
+        accountId: this.userId,
         projectId: this.parameter,
         controlSchemeName: this.newControlName,
         controlSchemeNumber: this.newControlNumber,
@@ -247,6 +265,7 @@ export default {
         controlSchemesList.sort((a, b) => b.date - a.date); // Reverse the order
 
         this.controlSchemes = controlSchemesList; // Update the projects data property
+        this.controlSchemesLoaded = true; // sætter loading text til at fjerne sig
       } catch (error) {
         console.error("Error fetching documents:", error);
       }

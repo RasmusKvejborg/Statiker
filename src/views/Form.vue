@@ -9,7 +9,6 @@
       <div v-for="index in 6" :key="index" class="controlschemes">
         <h3>B{{ index }}</h3>
 
-        <p>{{ rightFormData }}</p>
         <div class="container">
           <table>
             <thead>
@@ -71,10 +70,16 @@
                   </p>
                 </td>
                 <td class="fixedtd">
-                  <textarea class="textarea"></textarea>
+                  <textarea
+                    class="textarea"
+                    v-model="rightFormData['B' + index]['datoInit'][key]"
+                  ></textarea>
                 </td>
                 <td class="fixedtd2">
-                  <textarea class="textarea2"></textarea>
+                  <textarea
+                    class="textarea2"
+                    v-model="rightFormData['B' + index]['kontrolRes'][key]"
+                  ></textarea>
                 </td>
               </tr>
             </tbody>
@@ -141,7 +146,14 @@
 // @ is an alias to /src
 import { updateProjectStatus } from "@/components/utils.js";
 
-import { collection, addDoc, getDocs, getDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  getDoc,
+  doc,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "../firebase.js";
 
 export default {
@@ -154,17 +166,42 @@ export default {
   data() {
     return {
       leftFormData: null,
-      rightFormData: {}, // blir gemt...
-      loading: true,
-      formData: {
-        // Assuming 'Header 8' and 'Header 9' need nested objects
-        B1: "jek",
-        B2: "med",
-        B3: "dig",
-        B4: "",
-        B5: "",
-        B6: "",
+      rightFormData: {
+        //           v-model="rightFormData['B' + index]['kontrolRes'][key]"
+        B1: {
+          datoInit: {
+            1: "",
+            2: "",
+            3: "",
+          },
+          kontrolRes: {
+            1: "",
+            2: "",
+            3: "",
+          },
+        },
+        B2: {
+          datoInit: {},
+          kontrolRes: {},
+        },
+        B3: {
+          datoInit: {},
+          kontrolRes: {},
+        },
+        B4: {
+          datoInit: {},
+          kontrolRes: {},
+        },
+        B5: {
+          datoInit: {},
+          kontrolRes: {},
+        },
+        B6: {
+          datoInit: {},
+          kontrolRes: {},
+        },
       },
+      loading: true,
     };
   },
 
@@ -173,8 +210,20 @@ export default {
   },
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
-    saveSubmittedData() {
-      console.log("saved!!" + this.rightFormData);
+    async saveSubmittedData() {
+      const submittedDataRef = doc(db, "controlSchemes", this.parameter); // parameter er i dette tilfælde controlSchemeId
+
+      try {
+        const dataObj = {
+          submittedControlData: this.rightFormData,
+        };
+
+        const docRef = await setDoc(submittedDataRef, dataObj, { merge: true }); // opdaterer også, hvis finde i forvejen??
+
+        return;
+      } catch (error) {
+        console.error("Error adding/updating field in the project:", error);
+      }
     },
 
     async fetchLeftAndRightTexts() {
@@ -189,9 +238,8 @@ export default {
 
           this.leftFormData = docData.controlSchemeTexts;
           //KU OS VÆRE RELEVANT MED CONTROLSCHEMENAME OG NUMBER... OG så vise det i en h3
-          this.rightFormData = docData.rightFormTexts
-            ? docData.rightFormTexts
-            : {};
+          this.rightFormData =
+            docData.submittedControlData || this.rightFormData;
         }
       } catch (error) {
         console.error("Error fetching document... ", error);
