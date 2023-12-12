@@ -23,7 +23,7 @@
         >
       </div>
 
-      <v-row class="project-headlines">
+      <v-row v-if="projects && projects.length > 0" class="project-headlines">
         <v-col cols="3">
           <!-- Headline 1 -->
           <h4>Sagsnummer</h4>

@@ -90,7 +90,7 @@ table tbody tr:nth-child(even) {
 }
 
 .project-headlines {
-  margin-top: 20px;
+  margin-top: 20px !important;
   padding-inline: 8px;
 }
 
