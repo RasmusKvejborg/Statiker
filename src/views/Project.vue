@@ -27,6 +27,7 @@
         v-model="selectedOption"
         :items="Object.keys(alltemplates)"
         @update:modelValue="setCurrentText()"
+        class="maxwidth300"
       >
         <template v-slot:label>
           <span style="font-size: 14px">Vælg skabelon:</span>
@@ -276,7 +277,10 @@ export default {
 
     togglePopup(id) {
       (this.hiddenMessage = ""), console.log("Opening With ID");
-      this.modalLink = `http://localhost:8081/form/${id}`;
+      // this.modalLink = `http://localhost:8081/form/${id}`;
+
+      const baseDomain = window.location.origin;
+      this.modalLink = `${baseDomain}/form/${id}`;
       document.getElementById("popup-1").classList.toggle("active");
     },
 

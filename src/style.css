@@ -98,6 +98,10 @@ table tbody tr:nth-child(even) {
   margin-bottom: 20px;
 }
 
+.maxwidth300 {
+  max-width: 400px;
+}
+
 .plus-button {
   margin-bottom: 30px;
 }
