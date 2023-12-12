@@ -1,9 +1,18 @@
 <template>
   <div class="login-container">
-    <h1>Opret konto</h1>
-    <input type="text" placeholder="Email" v-model="email" />
-    <input type="password" placeholder="Kodeord" v-model="password" />
-    <v-btn @click="register" color="primary" class="action-button">Opret</v-btn>
+    <h3 class="marginbot20">Opret konto</h3>
+
+    <form @submit.prevent="register">
+      <input type="text" placeholder="Email" v-model="email" />
+      <input type="password" placeholder="Kodeord" v-model="password" />
+      <v-btn
+        type="submit"
+        @click="register"
+        color="primary"
+        class="action-button"
+        >Opret</v-btn
+      >
+    </form>
   </div>
 </template>
 

@@ -94,6 +94,10 @@ table tbody tr:nth-child(even) {
   padding-inline: 8px;
 }
 
+.marginbot20 {
+  margin-bottom: 20px;
+}
+
 .plus-button {
   margin-bottom: 30px;
 }
