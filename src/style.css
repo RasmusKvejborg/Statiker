@@ -119,7 +119,7 @@ table tbody tr:nth-child(even) {
   cursor: pointer;
   transition: background-color 0.3s ease;
   font-size: 20px; /* Adjust the font size as needed */
-  margin-bottom: 20px;
+  margin-block: 20px !important;
   margin-right: 10px;
 }
 
@@ -224,4 +224,10 @@ table tbody tr:nth-child(even) {
 .popup.active .content {
   transition: all 300ms ease-in-out;
   transform: translate(-50%, -50%) scale(1);
+}
+
+.login-container {
+  max-width: 400px; /* Set a maximum width for the container */
+  margin: 0 auto; /* Center the container horizontally */
+  padding: 20px; /* Add some padding for better visual appearance */
 }

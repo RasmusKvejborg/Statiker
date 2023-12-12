@@ -1,9 +1,27 @@
 <template>
-  <h1>Log ind</h1>
-  <p><input type="text" placeholder="Email" v-model="email" /></p>
-  <p><input type="password" placeholder="Kodeord" v-model="password" /></p>
-  <p v-if="errorMessage">{{ errorMessage }}</p>
-  <p><v-btn @click="logIn">Log ind</v-btn></p>
+  <v-container>
+    <p>
+      OBS: Vi har skiftet hjemmeside til
+      <a href="http://xn--nordingenir-pgb.dk/">nordingeniør.dk</a>. Denne side
+      bliver dedikeret til software med værktøjer til alle jer i branchen.
+    </p>
+    <br />
+    <br />
+
+    <div class="login-container">
+      <h2>Log ind</h2>
+      <input type="text" placeholder="Email" v-model="email" />
+      <input type="password" placeholder="Kodeord" v-model="password" />
+      <p v-if="errorMessage">{{ errorMessage }}</p>
+      <v-btn @click="logIn" color="primary" class="action-button"
+        >Log ind</v-btn
+      >
+      <p>
+        Har dit firma endnu ikke adgang?
+        <a href="/register">Opret jer gratis</a>
+      </p>
+    </div>
+  </v-container>
 </template>
 
 <script>

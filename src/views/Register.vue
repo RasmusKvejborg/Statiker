@@ -1,8 +1,10 @@
 <template>
-  <h1>Opret konto</h1>
-  <p><input type="text" placeholder="Email" v-model="email" /></p>
-  <p><input type="password" placeholder="Kodeord" v-model="password" /></p>
-  <p><v-btn @click="register">Opret</v-btn></p>
+  <div class="login-container">
+    <h1>Opret konto</h1>
+    <input type="text" placeholder="Email" v-model="email" />
+    <input type="password" placeholder="Kodeord" v-model="password" />
+    <v-btn @click="register" color="primary" class="action-button">Opret</v-btn>
+  </div>
 </template>
 
 <script>

@@ -75,7 +75,7 @@ router.beforeEach(async (to, from, next) => {
     if (await getCurrentUser()) {
       next();
     } else {
-      alert("Log ind for at få adgang til denne side");
+      // alert("Log ind for at få adgang til denne side");
       next("/login");
     }
   } else {
