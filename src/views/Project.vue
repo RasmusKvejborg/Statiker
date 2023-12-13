@@ -269,16 +269,8 @@ export default {
       this.currentTexts = templateTextsFromFile[this.selectedOption];
     },
 
-    // togglePopup() {
-    //   (this.hiddenMessage = ""), console.log("closing or SAFS");
-    //   document.getElementById("popup-1").classList.toggle("active");
-    //   this.$router.push(`/form/${this.parameter}`);
-    // },
-
     togglePopup(id) {
       (this.hiddenMessage = ""), console.log("Opening With ID");
-      // this.modalLink = `http://localhost:8081/form/${id}`;
-
       const baseDomain = window.location.origin;
       this.modalLink = `${baseDomain}/form/${id}`;
       document.getElementById("popup-1").classList.toggle("active");

@@ -173,15 +173,10 @@ export default {
           });
     },
 
-    // togglePopup() {
-    //   this.hiddenMessage = "",
-    //   console.log("closing or opening");
-    //   document.getElementById("popup-1").classList.toggle("active");
-    // },
-
     togglePopup(id) {
-      (this.hiddenMessage = ""),
-        (this.modalLink = `http://localhost:8081/form/${id}`);
+      this.hiddenMessage = "";
+      const baseDomain = window.location.origin;
+      this.modalLink = `${baseDomain}/form/${id}`;
       console.log("closing or opening");
       document.getElementById("popup-1").classList.toggle("active");
     },
