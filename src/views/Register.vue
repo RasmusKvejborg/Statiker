@@ -25,6 +25,10 @@ input[type="password"] {
   box-shadow: none; /* Remove any box shadow */
   font-size: 14px; /* Adjust font size */
 }
+
+input[type="password"] + button {
+  margin-block: 10px; /* Add extra margin to the button after the input */
+}
 </style>
 <script>
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";

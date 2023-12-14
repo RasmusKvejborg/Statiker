@@ -12,13 +12,7 @@
         <input type="text" placeholder="Email" v-model="email" />
         <input type="password" placeholder="Kodeord" v-model="password" />
         <p v-if="errorMessage">{{ errorMessage }}</p>
-        <v-btn
-          type="submit"
-          @click="logIn"
-          color="primary"
-          class="action-button"
-          >Log ind</v-btn
-        >
+        <v-btn type="submit" @click="logIn" color="primary">Log ind</v-btn>
       </form>
       <p>
         Har dit firma endnu ikke adgang?
@@ -43,6 +37,10 @@ input[type="password"] {
   border-radius: 5px;
   box-shadow: none; /* Remove any box shadow */
   font-size: 14px; /* Adjust font size */
+}
+
+input[type="password"] + button {
+  margin-block: 10px; /* Add extra margin to the button after the input */
 }
 </style>
 <script>
