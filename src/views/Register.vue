@@ -5,13 +5,7 @@
     <form>
       <input type="text" placeholder="Email" v-model="email" />
       <input type="password" placeholder="Kodeord" v-model="password" />
-      <v-btn
-        type="submit"
-        @click="register"
-        color="primary"
-        class="action-button"
-        >Opret</v-btn
-      >
+      <v-btn type="submit" @click="register" color="primary">Opret</v-btn>
     </form>
   </div>
 </template>

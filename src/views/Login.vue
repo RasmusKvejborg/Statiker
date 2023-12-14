@@ -8,7 +8,7 @@
 
     <div class="login-container">
       <h3 class="marginbot20">Indtast email og kodeord</h3>
-      <form @submit.prevent="register">
+      <form>
         <input type="text" placeholder="Email" v-model="email" />
         <input type="password" placeholder="Kodeord" v-model="password" />
         <p v-if="errorMessage">{{ errorMessage }}</p>
