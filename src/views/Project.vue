@@ -144,10 +144,10 @@
 
     <div class="margin20">
       <v-row>
-        <v-col>
-          <v-btn color="primary" @click="createLink(id)">Få link</v-btn>
+        <v-col cols="2">
+          <v-btn color="primary" @click="createLink(id)">Opret link</v-btn>
         </v-col>
-        <v-col v-if="isAddingTemplate">
+        <v-col cols="2" v-if="isAddingTemplate">
           <input
             v-model="newTemplateName"
             placeholder="Skabelon-navn"
@@ -158,7 +158,7 @@
           <v-checkbox
             class="margin-20"
             v-model="isAddingTemplate"
-            label="Gem ny skabelon til fremtidig brug"
+            label="Gem ny skabelon til fremtidig brug, når linket oprettes"
           ></v-checkbox>
         </v-col>
         <v-spacer></v-spacer>

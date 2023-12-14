@@ -7,7 +7,7 @@
     </p> -->
 
     <div class="login-container">
-      <h3 class="marginbot20">Log ind</h3>
+      <h3 class="marginbot20">Indtast email og kodeord</h3>
       <form @submit.prevent="register">
         <input type="text" placeholder="Email" v-model="email" />
         <input type="password" placeholder="Kodeord" v-model="password" />
@@ -22,12 +22,29 @@
       </form>
       <p>
         Har dit firma endnu ikke adgang?
-        <a href="/register">Opret jer gratis</a>
+        <a href="/register">Opret en gratis konto</a>
       </p>
     </div>
   </v-container>
 </template>
 
+<style scoped>
+/* Your existing styles */
+/* ... */
+
+/* Additional styling for input fields */
+input[type="text"],
+input[type="password"] {
+  background-color: #fff; /* Set a light background color */
+  color: #333;
+  padding: 8px; /* Adjust padding as needed */
+  margin-bottom: 10px;
+  border: 1px solid #ccc; /* Add a border for better contrast */
+  border-radius: 5px;
+  box-shadow: none; /* Remove any box shadow */
+  font-size: 14px; /* Adjust font size */
+}
+</style>
 <script>
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
