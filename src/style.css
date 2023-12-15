@@ -239,3 +239,7 @@ table tbody tr:nth-child(even) {
   margin: 0 auto; /* Center the container horizontally */
   padding: 20px; /* Add some padding for better visual appearance */
 }
+
+.error-message {
+  color: red;
+}

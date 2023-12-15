@@ -8,10 +8,11 @@
 
     <div class="login-container">
       <h3 class="marginbot20">Indtast email og kodeord</h3>
-      <form>
+      <!-- laver lige en submit prevent fordi den skal ikke registrere 2 gange: både submit (default og min loginfunktion) -->
+      <form @submit.prevent>
         <input type="text" placeholder="Email" v-model="email" />
         <input type="password" placeholder="Kodeord" v-model="password" />
-        <p v-if="errorMessage">{{ errorMessage }}</p>
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
         <v-btn type="submit" @click="logIn" color="primary">Log ind</v-btn>
       </form>
       <p>
@@ -77,8 +78,13 @@ export default {
             case "auth/wrong-password":
               this.errorMessage = "Forkert kodeord";
               break;
-            default:
+
+            case "auth/invalid-login-credentials":
               this.errorMessage = "Forkert email eller kodeord";
+              break;
+
+            default:
+              alert("Fejl128: " + error.message);
           }
         });
     },

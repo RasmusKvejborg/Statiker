@@ -2,9 +2,10 @@
   <div class="login-container">
     <h3 class="marginbot20">Opret konto</h3>
 
-    <form>
+    <form @submit.prevent>
       <input type="text" placeholder="Email" v-model="email" />
       <input type="password" placeholder="Kodeord" v-model="password" />
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       <v-btn type="submit" @click="register" color="primary">Opret</v-btn>
     </form>
   </div>
@@ -38,6 +39,7 @@ export default {
     return {
       email: "",
       password: "",
+      errorMessage: "",
     };
   },
 
@@ -52,7 +54,27 @@ export default {
         })
         .catch((error) => {
           console.log(error.message + "error code: " + error.code);
-          alert("Fejl: " + error.message);
+
+          switch (error.code) {
+            case "auth/invalid-email":
+              this.errorMessage = "Emailen ser ikke korrekt ud";
+              break;
+            case "auth/weak-password":
+              this.errorMessage = "Kodeordet skal være mindst 6 tegn";
+              break;
+            case "auth/missing-password":
+              this.errorMessage = "Indtast kodeord";
+              break;
+
+            case "auth/email-already-in-use":
+              this.errorMessage =
+                "Email er allerede i brug. Klik på 'Log ind' oppe i menuen";
+              break;
+
+            default:
+              // this.errorMessage = "Forkert email eller kodeord";
+              alert("Fejl128: " + error.message);
+          }
         });
     },
   },

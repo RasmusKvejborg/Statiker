@@ -1,5 +1,5 @@
 <template>
-  <button @mousedown="downloadFile">Download PDF</button>
+  <v-btn @click="downloadFile">Download PDF</v-btn>
 </template>
 
 <script>
@@ -15,7 +15,11 @@ export default {
       var opt = {
         margin: 1,
         filename: me.name,
+        jsPDF: {
+          orientation: "landscape",
+        },
       };
+
       html2pdf().from(invoice).set(opt).save();
     },
   },
