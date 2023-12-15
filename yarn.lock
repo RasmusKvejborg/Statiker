@@ -4051,11 +4051,6 @@ html2pdf.js@^0.9.0:
     html2canvas "^1.0.0-alpha.12"
     jspdf "^1.3.5"
 
-html2pdf@^0.0.11:
-  version "0.0.11"
-  resolved "https://registry.npmjs.org/html2pdf/-/html2pdf-0.0.11.tgz"
-  integrity sha512-Kx3I5r7lazHZzZv5lDk59jQoTxqaEGlf2BcGNvzWGPQVu0hE8jYCk4hboksuaCvmMJPa0S0A+156ZbE71Wdo2w==
-
 htmlparser2@^6.1.0:
   version "6.1.0"
   resolved "https://registry.npmjs.org/htmlparser2/-/htmlparser2-6.1.0.tgz"

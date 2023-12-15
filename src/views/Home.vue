@@ -70,16 +70,7 @@
 
 <script>
 import { db } from "../firebase.js";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  querym,
-  doc,
-  getDoc,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { formatDate } from "../components/utils.js";
 
 export default {
