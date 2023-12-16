@@ -17,6 +17,7 @@ export default {
         filename: me.name,
         jsPDF: {
           orientation: "landscape",
+          format: "a3",
         },
       };
 
