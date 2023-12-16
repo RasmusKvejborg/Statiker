@@ -23,6 +23,9 @@ const routes = [
     name: "project",
     component: Project,
     props: true,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/projectOverview/:parameter/:projectNumber/:projectName",

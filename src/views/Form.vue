@@ -8,7 +8,7 @@
     <div v-else>
       <div id="resultPrinted">
         <div v-for="index in 6" :key="index" class="controlschemes">
-          <h3>B{{ index }}</h3>
+          <h3>B{{ index }}: {{ headerTexts["B" + index] }}</h3>
 
           <div class="container">
             <table>
@@ -176,6 +176,14 @@ export default {
 
   data() {
     return {
+      headerTexts: {
+        B1: "Kontrol af gennemgang af udførselsgrundlag fra projektering",
+        B2: "Kontrol af udførselsgrundlag for arbejdet",
+        B3: "Kontrol af materialer og produkter",
+        B4: "Modtagekontrol",
+        B5: "Kontrol af udførelse",
+        B6: "Slutkontrol",
+      },
       leftFormData: null,
       rightFormData: {
         //           v-model="rightFormData['B' + index]['kontrolRes'][key]"

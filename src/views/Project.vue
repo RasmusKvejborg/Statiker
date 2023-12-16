@@ -35,17 +35,17 @@
       </v-select>
 
       <div v-for="index in 6" :key="index" class="controlschemes">
-        <h3>B{{ index }}</h3>
+        <h3>B{{ index }}: {{ headerTexts["B" + index] }}</h3>
         <v-table>
           <thead>
             <tr class="blue-header">
-              <th>Nr.:</th>
-              <th>Kontrol af</th>
-              <th>Tidspunkt</th>
-              <th>Acceptkriterium</th>
-              <th>Kontrolomfang</th>
-              <th>Kontrolmetode</th>
-              <th>Dokumentationsmetode</th>
+              <th><strong>Nr.:</strong></th>
+              <th><strong>Kontrol af</strong></th>
+              <th><strong>Tidspunkt</strong></th>
+              <th><strong>Acceptkriterium</strong></th>
+              <th><strong>Kontrolomfang</strong></th>
+              <th><strong>Kontrolmetode</strong></th>
+              <th><strong>Dokumentationsmetode</strong></th>
               <th></th>
             </tr>
           </thead>
@@ -241,6 +241,14 @@ export default {
       newTemplateName: null,
       modalLink: "",
       hiddenMessage: "",
+      headerTexts: {
+        B1: "Kontrol af gennemgang af udførselsgrundlag fra projektering",
+        B2: "Kontrol af udførselsgrundlag for arbejdet",
+        B3: "Kontrol af materialer og produkter",
+        B4: "Modtagekontrol",
+        B5: "Kontrol af udførelse",
+        B6: "Slutkontrol",
+      },
     };
   },
 
