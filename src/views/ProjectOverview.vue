@@ -30,16 +30,15 @@
 
         <div v-if="isAddingControl">
           <input
-            v-model="newControlName"
-            placeholder="Kontrolskema Navn"
-            class="project-input"
-          />
-          <input
             v-model="newControlNumber"
             placeholder="Kontrolskema ID"
             class="project-input"
           />
-
+          <input
+            v-model="newControlName"
+            placeholder="Kontrolskema Navn"
+            class="project-input"
+          />
           <v-btn class="my-0" color="primary" @click="saveControlScheme"
             >Opret</v-btn
           >
