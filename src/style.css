@@ -243,3 +243,7 @@ table tbody tr:nth-child(even) {
 .error-message {
   color: red;
 }
+
+.marginTopAndBot10 {
+  margin-block: 12px;
+}

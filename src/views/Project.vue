@@ -62,10 +62,10 @@
                 />
               </td>
               <td>
-                <input
+                <textarea
                   class="invisible-input width100 needs-padding"
                   v-model="currentTexts['B' + index]['Header 2'][key]"
-                />
+                ></textarea>
               </td>
               <!--  -->
               <td>

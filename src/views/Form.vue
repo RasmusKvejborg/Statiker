@@ -7,90 +7,92 @@
     </div> -->
     <div v-else>
       <div id="resultPrinted">
+        <h2>{{}}</h2>
         <div v-for="index in 6" :key="index" class="controlschemes">
-          <h3>B{{ index }}: {{ headerTexts["B" + index] }}</h3>
-
-          <div class="container">
-            <table>
-              <thead>
-                <tr class="blue-header">
-                  <th class="min-width">Nr.:</th>
-                  <th class="no-wrap">Kontrol af</th>
-                  <th class="no-wrap">Tidspunkt</th>
-                  <th class="no-wrap">Acceptkriterium</th>
-                  <th class="no-wrap">Kontrolomfang</th>
-                  <th class="no-wrap">Kontrolmetode</th>
-                  <th class="no-wrap">Dokumentationsmetode</th>
-                  <th class="fixed blue-header">Kontrolresultat</th>
-                  <th class="fixed2 blue-header">Godkendt dato & init.</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- laver en row for hver række der er i header1 -->
-                <tr
-                  class="tr"
-                  v-for="(value, key) in this.leftFormData['B' + index][
-                    'Header 1'
-                  ]"
-                  :key="key"
-                >
-                  <td>
-                    <p class="no-wrap">
-                      {{ leftFormData["B" + index]["Header 1"][key] }}
-                    </p>
-                  </td>
-                  <td>
-                    <p class="no-wrap">
-                      {{ leftFormData["B" + index]["Header 2"][key] }}
-                    </p>
-                  </td>
-                  <!--  -->
-                  <td>
-                    <p class="no-wrap">
-                      {{ leftFormData["B" + index]["Header 3"][key] }}
-                    </p>
-                  </td>
-                  <td>
-                    <p class="no-wrap">
-                      {{ leftFormData["B" + index]["Header 4"][key] }}
-                    </p>
-                  </td>
-                  <td>
-                    <p class="no-wrap">
-                      {{ leftFormData["B" + index]["Header 5"][key] }}
-                    </p>
-                  </td>
-                  <td>
-                    <p class="no-wrap">
-                      {{ leftFormData["B" + index]["Header 6"][key] }}
-                    </p>
-                  </td>
-                  <td>
-                    <p class="no-wrap">
-                      {{ leftFormData["B" + index]["Header 7"][key] }}
-                    </p>
-                  </td>
-                  <td class="fixedtd">
-                    <textarea
-                      class="textarea"
-                      v-model="rightFormData['B' + index]['datoInit'][key]"
-                    ></textarea>
-                  </td>
-                  <td class="fixedtd2">
-                    <textarea
-                      class="textarea2"
-                      v-model="rightFormData['B' + index]['kontrolRes'][key]"
-                    ></textarea>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="marginTopAndBot10">
+            <h3>B{{ index }}: {{ headerTexts["B" + index] }}</h3>
+            <div class="container">
+              <table>
+                <thead>
+                  <tr class="blue-header">
+                    <th class="min-width">Nr.:</th>
+                    <th class="no-wrap">Kontrol af</th>
+                    <th class="no-wrap">Tidspunkt</th>
+                    <th class="no-wrap">Acceptkriterium</th>
+                    <th class="no-wrap">Kontrolomfang</th>
+                    <th class="no-wrap">Kontrolmetode</th>
+                    <th class="no-wrap">Dokumentationsmetode</th>
+                    <th class="fixed blue-header">Kontrolresultat</th>
+                    <th class="fixed2 blue-header">Godkendt dato & init.</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- laver en row for hver række der er i header1 -->
+                  <tr
+                    class="tr"
+                    v-for="(value, key) in this.leftFormData['B' + index][
+                      'Header 1'
+                    ]"
+                    :key="key"
+                  >
+                    <td>
+                      <p class="no-wrap">
+                        {{ leftFormData["B" + index]["Header 1"][key] }}
+                      </p>
+                    </td>
+                    <td>
+                      <p class="no-wrap">
+                        {{ leftFormData["B" + index]["Header 2"][key] }}
+                      </p>
+                    </td>
+                    <!--  -->
+                    <td>
+                      <p class="no-wrap">
+                        {{ leftFormData["B" + index]["Header 3"][key] }}
+                      </p>
+                    </td>
+                    <td>
+                      <p class="no-wrap">
+                        {{ leftFormData["B" + index]["Header 4"][key] }}
+                      </p>
+                    </td>
+                    <td>
+                      <p class="no-wrap">
+                        {{ leftFormData["B" + index]["Header 5"][key] }}
+                      </p>
+                    </td>
+                    <td>
+                      <p class="no-wrap">
+                        {{ leftFormData["B" + index]["Header 6"][key] }}
+                      </p>
+                    </td>
+                    <td>
+                      <p class="no-wrap">
+                        {{ leftFormData["B" + index]["Header 7"][key] }}
+                      </p>
+                    </td>
+                    <td class="fixedtd">
+                      <textarea
+                        class="textarea"
+                        v-model="rightFormData['B' + index]['datoInit'][key]"
+                      ></textarea>
+                    </td>
+                    <td class="fixedtd2">
+                      <textarea
+                        class="textarea2"
+                        v-model="rightFormData['B' + index]['kontrolRes'][key]"
+                      ></textarea>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
       <!-- --------------------oversigt slut ------------------------->
 
-      <div class="margin20">
+      <div>
         <v-btn color="primary" @click="saveSubmittedData">Indsend</v-btn>
         <download-button
           class="action-button"
@@ -163,7 +165,7 @@ import { db } from "../firebase.js";
 import DownloadButton from "../components/DownloadButton";
 
 export default {
-  name: "SomeComponent",
+  name: "SomeComponent", // tror det er redundant?
   components: {
     DownloadButton,
   },
