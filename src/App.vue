@@ -15,7 +15,7 @@
 
       <v-btn flat color="grey">Om NordStatik</v-btn>
 
-      <v-btn flat color="grey">Kontakt</v-btn>
+      <v-btn flat color="grey" @click="navigateToAccount">Konto</v-btn>
 
       <v-btn v-if="isLoggedIn" @click="logout" flat color="grey">Log ud</v-btn>
       <v-btn v-else @click="navigateToLogin" flat color="grey">Log ind</v-btn>
@@ -69,7 +69,11 @@ export default {
     },
 
     navigateToHome() {
-      this.$router.push("/");
+      this.$router.push({ name: "home" });
+    },
+
+    navigateToAccount() {
+      this.$router.push({ name: "account" });
     },
 
     navigateToLogin() {
