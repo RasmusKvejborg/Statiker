@@ -81,7 +81,14 @@ table tbody tr:nth-child(even) {
 }
 
 .no-wrap {
-  white-space: nowrap; /* Prevent wrapping for this column */
+  white-space: nowrap;
+}
+
+.wrap {
+  white-space: normal; /* Allow content to wrap within the table cell */
+  word-wrap: break-word; /* Enable word wrapping for long words */
+  word-break: break-word; /* Enable word breaking for long words */
+  overflow-wrap: break-word; /* Alternative word wrapping */
 }
 
 .min-width {
@@ -148,6 +155,8 @@ table tbody tr:nth-child(even) {
   border: none; /* Remove the border */
   background: none; /* Remove the background */
   outline: none; /* Remove the outline when focused */
+  resize: vertical; /* Allow vertical resizing */
+  overflow-y: auto; /* Add vertical scroll when the content exceeds the height */
 }
 
 .invisible-input::-webkit-calendar-picker-indicator {

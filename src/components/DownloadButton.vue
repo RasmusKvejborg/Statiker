@@ -4,6 +4,7 @@
 
 <script>
 import html2pdf from "html2pdf.js";
+import logo from "../assets/logo.png";
 
 export default {
   props: ["dom", "name"],
@@ -37,6 +38,15 @@ export default {
               "Side " + i + " af " + totalPages,
               pdf.internal.pageSize.getWidth() - 25,
               pdf.internal.pageSize.getHeight() - 4
+            );
+            var photoheight = 20;
+            pdf.addImage(
+              logo,
+              "PNG",
+              15, // 15px fra venstre
+              pdf.internal.pageSize.getHeight() - (1 + photoheight), // 1 px fra bunden
+              20, // bredde
+              photoheight // højde
             );
           }
 

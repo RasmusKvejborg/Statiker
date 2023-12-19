@@ -7,7 +7,7 @@
     </div> -->
     <div v-else>
       <div id="resultPrinted">
-        <h2>{{}}</h2>
+        <h2>{{ controlSchemeNumber + " - " + controlSchemeName }}</h2>
         <div v-for="index in 6" :key="index" class="controlschemes">
           <div class="marginTopAndBot10">
             <h3>B{{ index }}: {{ headerTexts["B" + index] }}</h3>
@@ -36,38 +36,38 @@
                     :key="key"
                   >
                     <td>
-                      <p class="no-wrap">
+                      <p class="wrap">
                         {{ leftFormData["B" + index]["Header 1"][key] }}
                       </p>
                     </td>
                     <td>
-                      <p class="no-wrap">
+                      <p class="wrap">
                         {{ leftFormData["B" + index]["Header 2"][key] }}
                       </p>
                     </td>
                     <!--  -->
                     <td>
-                      <p class="no-wrap">
+                      <p class="wrap">
                         {{ leftFormData["B" + index]["Header 3"][key] }}
                       </p>
                     </td>
                     <td>
-                      <p class="no-wrap">
+                      <p class="wrap">
                         {{ leftFormData["B" + index]["Header 4"][key] }}
                       </p>
                     </td>
                     <td>
-                      <p class="no-wrap">
+                      <p class="wrap">
                         {{ leftFormData["B" + index]["Header 5"][key] }}
                       </p>
                     </td>
                     <td>
-                      <p class="no-wrap">
+                      <p class="wrap">
                         {{ leftFormData["B" + index]["Header 6"][key] }}
                       </p>
                     </td>
                     <td>
-                      <p class="no-wrap">
+                      <p class="wrap">
                         {{ leftFormData["B" + index]["Header 7"][key] }}
                       </p>
                     </td>
@@ -186,6 +186,9 @@ export default {
         B5: "Kontrol af udførelse",
         B6: "Slutkontrol",
       },
+      controlSchemeName: "",
+      controlSchemeNumber: "",
+
       leftFormData: null,
       rightFormData: {
         //           v-model="rightFormData['B' + index]['kontrolRes'][key]"
@@ -239,8 +242,9 @@ export default {
           submittedControlData: this.rightFormData,
         };
 
-        const docRef = await setDoc(submittedDataRef, dataObj, { merge: true }); // opdaterer også, hvis finde i forvejen??
+        const docRef = await setDoc(submittedDataRef, dataObj, { merge: true }); // opdaterer også, hvis findes i forvejen??
 
+        alert("Dataen er gemt");
         return;
       } catch (error) {
         console.error("Error adding/updating field in the project:", error);
@@ -258,7 +262,8 @@ export default {
           const docData = docSnapshot.data();
 
           this.leftFormData = docData.controlSchemeTexts;
-          //KU OS VÆRE RELEVANT MED CONTROLSCHEMENAME OG NUMBER... OG så vise det i en h3
+          this.controlSchemeName = docData.controlSchemeName;
+          this.controlSchemeNumber = docData.controlSchemeNumber;
           this.rightFormData =
             docData.submittedControlData || this.rightFormData;
         }

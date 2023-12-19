@@ -69,7 +69,7 @@
               </td>
               <!--  -->
               <td>
-                <input
+                <textarea
                   class="invisible-input width100 needs-padding"
                   :list="
                     index === 1
@@ -79,7 +79,7 @@
                       : ''
                   "
                   v-model="currentTexts['B' + index]['Header 3'][key]"
-                />
+                ></textarea>
 
                 <datalist id="tidspunkt-b1">
                   <option value="Inden produktion."></option>
@@ -89,28 +89,28 @@
                 </datalist>
               </td>
               <td>
-                <input
+                <textarea
                   class="invisible-input width100 needs-padding"
                   v-model="currentTexts['B' + index]['Header 4'][key]"
-                />
+                ></textarea>
               </td>
               <td>
-                <input
+                <textarea
                   class="invisible-input width100 needs-padding"
                   v-model="currentTexts['B' + index]['Header 5'][key]"
-                />
+                ></textarea>
               </td>
               <td>
-                <input
+                <textarea
                   class="invisible-input width100 needs-padding"
                   v-model="currentTexts['B' + index]['Header 6'][key]"
-                />
+                ></textarea>
               </td>
               <td>
-                <input
+                <textarea
                   class="invisible-input width100 needs-padding"
                   v-model="currentTexts['B' + index]['Header 7'][key]"
-                />
+                ></textarea>
               </td>
               <td>
                 <v-btn
@@ -222,6 +222,7 @@ import {
   query,
 } from "firebase/firestore";
 import { db } from "../firebase.js";
+import { Text } from "vue";
 
 export default {
   props: {
@@ -230,7 +231,6 @@ export default {
     projectNumber: String,
     userId: String,
   },
-
   data() {
     return {
       selectedOption: "Tom skabelon", // "Beton: Fiberarmerede",
@@ -251,7 +251,6 @@ export default {
       },
     };
   },
-
   created() {
     // this.fetchTemplates(); bliver kaldt i watch, når der er et userId
     this.setCurrentText();
@@ -271,19 +270,16 @@ export default {
           // You can also provide an alternative method here if the Clipboard API is not available
         });
     },
-
     setCurrentText() {
       // her ku jeg måske sige indsæt fetched templatetexts hvis der er nogle, ellers vil den gå derind:
       this.currentTexts = templateTextsFromFile[this.selectedOption];
     },
-
     togglePopup(id) {
       (this.hiddenMessage = ""), console.log("Opening With ID");
       const baseDomain = window.location.origin;
       this.modalLink = `${baseDomain}/form/${id}`;
       document.getElementById("popup-1").classList.toggle("active");
     },
-
     async createLink() {
       if (this.isAddingTemplate) {
         if (!this.newTemplateName) {
@@ -294,41 +290,31 @@ export default {
           console.log("template saved: " + this.newTemplateName);
         }
       }
-
       this.addObjectToControlScheme();
-
       this.togglePopup(this.parameter);
     },
-
     //------ update controlschemes -----
     async addObjectToControlScheme() {
       const controlSchemeRef = doc(db, "controlSchemes", this.parameter); //parameter er i dette tilfælde controlSchemeId
-
       try {
         const dataObj = {
           controlSchemeTexts: this.currentTexts,
         };
-
         const docRef = await setDoc(controlSchemeRef, dataObj, { merge: true });
-
         return;
       } catch (error) {
         console.error("Error adding/updating field in the project:", error);
       }
     },
-
     startAddingTemplate() {
       // bare til at vise navneinput
       this.isAddingTemplate = true;
     },
-
     // -------------------- add row ---------------
     addRow(index) {
       let numberOfHeaders = Object.keys(this.currentTexts["B" + index]).length;
-
       let keys = Object.keys(this.currentTexts["B" + index]["Header 6"]);
       let lastKey = parseInt(keys[keys.length - 1]) || 0;
-
       // for each header, set an empty property called 4 (if lastKey is 3) and set the value to "" so it will be {4:""}
       for (
         let headernumber = 1;
@@ -339,11 +325,9 @@ export default {
           headernumber == 1 ? lastKey + 1 : ""; // adds 4 to the first column
       }
     },
-
     // -------------removeRow-----------------
     removeRow(index, rowNumber) {
       let numberOfHeaders = Object.keys(this.currentTexts["B" + index]).length;
-
       for (
         let headernumber = 1;
         headernumber <= numberOfHeaders;
@@ -354,10 +338,8 @@ export default {
         ];
       }
     },
-
     async saveTemplate() {
       const colRef = collection(db, "templates");
-
       const dataObj = {
         accountId: this.userId,
         templateName: this.newTemplateName,
@@ -366,22 +348,17 @@ export default {
       const docRef = await addDoc(colRef, dataObj);
       console.log("project was created with ID: ", docRef.id); // DET HER SKAL JEG BRUGE
     },
-
     //----------------------------------------------------------
-
     async fetchTemplates() {
       const collectionRef = collection(db, "templates");
-
       try {
         const querySnapshot = await getDocs(
           query(collectionRef, where("accountId", "==", this.userId))
         );
-
         querySnapshot.forEach((docSnapshot) => {
           if (docSnapshot.exists()) {
             const data = docSnapshot.data();
             console.log(this.alltemplates);
-
             this.alltemplates[data.templateName] = data.templateObject;
           }
         });
@@ -390,7 +367,6 @@ export default {
       }
     },
   },
-
   watch: {
     userId: {
       immediate: true, // Run on initial mount
@@ -401,5 +377,6 @@ export default {
       },
     },
   },
+  components: { Text },
 };
 </script>
