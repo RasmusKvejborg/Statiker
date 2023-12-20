@@ -98,6 +98,7 @@
           class="action-button"
           dom="#resultPrinted"
           name="myFilename.pdf"
+          :userId="userId"
         />
       </div>
     </div>
@@ -165,15 +166,14 @@ import { db } from "../firebase.js";
 import DownloadButton from "../components/DownloadButton";
 
 export default {
-  name: "SomeComponent", // tror det er redundant?
-  components: {
-    DownloadButton,
-  },
-
   props: {
+    userId: String,
     parameter: String,
     projectName: String,
     projectNumber: String,
+  },
+  components: {
+    DownloadButton,
   },
 
   data() {
