@@ -97,7 +97,7 @@
         <download-button
           class="action-button"
           dom="#resultPrinted"
-          name="myFilename.pdf"
+          :name="controlSchemeNumber + ' - ' + controlSchemeName"
           :userId="userId"
         />
       </div>

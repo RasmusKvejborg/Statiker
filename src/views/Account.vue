@@ -12,10 +12,10 @@
 
 <script>
 import { storage } from "../firebase.js";
-import logo from "../assets/logo.png";
+// import logo from "../assets/logo.png";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 
-const imageRef = ref(getStorage(), logo);
+// const imageRef = ref(getStorage(), logo);
 
 export default {
   props: {
@@ -62,7 +62,7 @@ export default {
         alert("File uploaded successfully!");
       } catch (error) {
         console.error("Error uploading file:", error);
-        alert("Failed to upload file: " + error);
+        alert("Fejl med upload af logo: " + error);
       }
     },
   },
