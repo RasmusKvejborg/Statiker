@@ -41,18 +41,28 @@ export default {
         img.crossOrigin = "anonymous";
         img.src = imageUrl;
         img.onload = () => {
+          let naturalWidth = img.naturalWidth; // Get image width
+          let naturalHeight = img.naturalHeight; // Get image height
+
+          // Use the dimensions as required
+          console.log("Image width:", naturalWidth);
+          console.log("Image height:", naturalHeight);
+
+          // Conditionally adjust height if it exceeds 50 pixels
+          var maxHeight = 50; // juster denne for at ændre logo størrelse
+
+          if (naturalHeight > maxHeight) {
+            const ratio = maxHeight / naturalHeight;
+            naturalHeight = maxHeight; // Set the height to 50 pixels
+            naturalWidth *= ratio; // Maintain aspect ratio for width
+          }
+
           html2pdf()
             .from(invoice)
             .set(opt)
             .toPdf()
             .get("pdf")
             .then(function (pdf) {
-              // const link = document.createElement("a");
-              // link.href = pdf.output("bloburl");
-              // link.download = "test56.pdf";
-              // link.click();
-              // link.remove();
-
               var totalPages = pdf.internal.getNumberOfPages();
               for (let i = 1; i <= totalPages; i++) {
                 pdf.setPage(i);
@@ -63,14 +73,14 @@ export default {
                   pdf.internal.pageSize.getWidth() - 25,
                   pdf.internal.pageSize.getHeight() - 4
                 );
-                var photoheight = 20;
+                // var photoheight = 20;
                 pdf.addImage(
                   img,
                   "PNG",
                   15, // 15px fra venstre
-                  pdf.internal.pageSize.getHeight() - (1 + photoheight), // 1 px fra bunden
-                  20, // bredde
-                  photoheight // højde
+                  pdf.internal.pageSize.getHeight() - (1 + naturalHeight), // 1 px fra bunden
+                  naturalWidth, // bredde
+                  naturalHeight // højde
                 );
               }
               pdf.save(me.name);
