@@ -12,8 +12,22 @@
       <form @submit.prevent>
         <input type="text" placeholder="Email" v-model="email" />
         <input type="password" placeholder="Kodeord" v-model="password" />
-        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-        <v-btn type="submit" @click="logIn" color="primary">Log ind</v-btn>
+        <p v-if="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </p>
+        <p v-if="resetMessage" @click="resetPassword" class="clickableText">
+          {{ resetMessage }}
+        </p>
+        <p v-if="emailMessage">
+          {{ emailMessage }}
+        </p>
+        <v-btn
+          class="marginTopAndBot10"
+          type="submit"
+          @click="logIn"
+          color="primary"
+          >Log ind</v-btn
+        >
       </form>
       <p>
         Har dit firma endnu ikke adgang?
@@ -45,7 +59,11 @@ input[type="password"] + button {
 }
 </style>
 <script>
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 
 export default {
   data() {
@@ -53,11 +71,30 @@ export default {
       email: "",
       password: "",
       errorMessage: null,
+      resetMessage: null,
+      emailMessage: null,
     };
   },
 
   methods: {
+    resetPassword() {
+      sendPasswordResetEmail(getAuth(), this.email)
+        .then(() => {
+          this.emailMessage = `For at nulstille kodeordet, følg emailen som er sendt til ${this.email}`;
+          this.errorMessage = null;
+          this.resetMessage = null;
+        })
+        .catch((error) => {
+          // Handle errors if sending password reset email fails
+          console.error("Error sending password reset email:", error);
+          alert("Fejl155: Det lykkedes ikke at nulstille kodeordet: ", error);
+        });
+    },
+
     logIn() {
+      this.emailMessage = null;
+      this.errorMessage = null;
+      this.resetMessage = null;
       // const auth = getAuth();
       signInWithEmailAndPassword(getAuth(), this.email, this.password)
         .then((data) => {
@@ -80,7 +117,8 @@ export default {
               break;
 
             case "auth/invalid-login-credentials":
-              this.errorMessage = "Forkert email eller kodeord";
+              this.errorMessage = "Forkert email eller kodeord.";
+              this.resetMessage = "Nulstil kodeord";
               break;
 
             default:

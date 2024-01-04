@@ -256,3 +256,8 @@ table tbody tr:nth-child(even) {
 .marginTopAndBot10 {
   margin-block: 12px;
 }
+
+.clickableText {
+  cursor: pointer;
+  text-decoration: underline;
+}

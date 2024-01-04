@@ -133,7 +133,7 @@
 
 <script>
 import { db } from "../firebase.js";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, where, query } from "firebase/firestore";
 import { formatDate, formatDateWithHours } from "../components/utils.js";
 
 export default {
@@ -232,9 +232,10 @@ export default {
 
     async fetchControlSchemes() {
       try {
-        console.log("this happens: fetchcontrolschemes");
         const collectionRef = collection(db, "controlSchemes");
-        const querySnapshot = await getDocs(collectionRef);
+        const querySnapshot = await getDocs(
+          query(collectionRef, where("projectId", "==", this.parameter))
+        );
 
         const controlSchemesList = [];
 
@@ -242,26 +243,22 @@ export default {
           if (docSnapshot.exists()) {
             const data = docSnapshot.data();
 
-            if (data.projectId === this.parameter) {
-              const controlScheme = {
-                id: docSnapshot.id, // Include the document ID
-                controlSchemeName: data.controlSchemeName
-                  ? data.controlSchemeName
-                  : null,
-                controlSchemeNumber: data.controlSchemeNumber
-                  ? data.controlSchemeNumber
-                  : null,
-                controlSchemeTexts: data.controlSchemeTexts
-                  ? data.controlSchemeTexts
-                  : null,
-                date: data.date ? data.date.toDate() : null, // Convert to Date object
-                changed: data.changed ? data.changed.toDate() : null,
-              };
-              // if (data.changed) {
-              //   console.log("testersss " + data.changed.toDate());
-              // }
-              controlSchemesList.push(controlScheme);
-            }
+            const controlScheme = {
+              id: docSnapshot.id, // Include the document ID
+              controlSchemeName: data.controlSchemeName
+                ? data.controlSchemeName
+                : null,
+              controlSchemeNumber: data.controlSchemeNumber
+                ? data.controlSchemeNumber
+                : null,
+              controlSchemeTexts: data.controlSchemeTexts
+                ? data.controlSchemeTexts
+                : null,
+              date: data.date ? data.date.toDate() : null, // Convert to Date object
+              changed: data.changed ? data.changed.toDate() : null,
+            };
+
+            controlSchemesList.push(controlScheme);
           }
         });
 

@@ -58,11 +58,11 @@ export default {
       auth = getAuth();
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          console.log("logged in.."); // how do I print the user Id?
+          // console.log("logged in.."); // how do I print the user Id?
           this.isLoggedIn = true;
           this.userId = user.uid;
         } else {
-          console.log("NOT logged in...");
+          // console.log("NOT logged in...");
           this.isLoggedIn = false;
         }
       });

@@ -22,8 +22,10 @@
                     <th class="no-wrap">Kontrolomfang</th>
                     <th class="no-wrap">Kontrolmetode</th>
                     <th class="no-wrap">Dokumentationsmetode</th>
-                    <th class="fixed blue-header">Kontrolresultat</th>
-                    <th class="fixed2 blue-header">Godkendt dato & init.</th>
+                    <div class="abosoluteContainter">
+                      <th class="fixed blue-header">Kontrolresultat</th>
+                      <th class="fixed2 blue-header">Dato & init.</th>
+                    </div>
                   </tr>
                 </thead>
                 <tbody>
@@ -71,18 +73,22 @@
                         {{ leftFormData["B" + index]["Header 7"][key] }}
                       </p>
                     </td>
-                    <td class="fixedtd">
-                      <textarea
-                        class="textarea"
-                        v-model="rightFormData['B' + index]['datoInit'][key]"
-                      ></textarea>
-                    </td>
-                    <td class="fixedtd2">
-                      <textarea
-                        class="textarea2"
-                        v-model="rightFormData['B' + index]['kontrolRes'][key]"
-                      ></textarea>
-                    </td>
+                    <div class="abosoluteContainter">
+                      <td class="fixedtd">
+                        <textarea
+                          class="textarea"
+                          v-model="rightFormData['B' + index]['datoInit'][key]"
+                        ></textarea>
+                      </td>
+                      <td class="fixedtd2">
+                        <textarea
+                          class="textarea2"
+                          v-model="
+                            rightFormData['B' + index]['kontrolRes'][key]
+                          "
+                        ></textarea>
+                      </td>
+                    </div>
                   </tr>
                 </tbody>
               </table>
@@ -111,43 +117,46 @@
   margin-right: 600px;
 }
 
+.abosoluteContainter {
+  position: absolute;
+  /* sets a margin-right */
+  right: 10px;
+}
+
 .fixed {
   position: absolute;
-  right: 184px;
-  width: 430px;
+  right: 170px;
+  width: 420px;
 }
 .fixed2 {
   position: absolute;
   right: 0px;
+  width: 170px;
 }
 
 .fixedtd {
   position: absolute;
   right: 0px;
-  width: 184px;
+  width: 170px;
 }
 .fixedtd2 {
   position: absolute;
-  right: 184px;
-  width: 430px;
+  right: 170px;
+  width: 420px;
 }
 .tr {
   height: 100px;
 }
 .textarea {
-  width: 184px;
-  height: 95px;
+  width: 100%;
+  height: 100%;
   resize: none;
-  outline: none;
-  padding-right: 10px;
 }
 
 .textarea2 {
-  width: 420px;
-  height: 95px;
+  width: 100%;
+  height: 100%;
   resize: none;
-  outline: none;
-  padding-right: 5px;
 }
 </style>
 
@@ -229,9 +238,29 @@ export default {
     };
   },
 
-  created() {
-    this.fetchLeftAndRightTexts();
+  // created() {
+  //   this.fetchLeftAndRightTexts();
+  // },
+
+  mounted() {
+    this.fetchLeftAndRightTexts(); // Ensure data is fetched first
   },
+
+  // det her er for at kalde setRowHeights efter DOM'en findes.
+  watch: {
+    leftFormData: {
+      immediate: true, // Trigger on component creation
+      handler(newVal) {
+        if (newVal && !this.isDataFetched) {
+          this.isDataFetched = true;
+          this.$nextTick(() => {
+            this.setRowHeights(); // Call the function once the data is fetched
+          });
+        }
+      },
+    },
+  },
+
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
     async saveSubmittedData() {
@@ -273,6 +302,45 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+
+    // rowheights method so set the height of the absolute areas to the right.
+    // setRowHeights() {
+    //   const rows = document.querySelectorAll("tbody tr");
+
+    //   rows.forEach((row) => {
+    //     const rowHeight = row.clientHeight; // Get the height of the row
+    //     const td1 = row.querySelector(".fixedtd");
+    //     const td2 = row.querySelector(".fixedtd2");
+
+    //     if (td1 && td2) {
+    //       td1.style.height = `${rowHeight}px`; // Apply row height to textarea1
+    //       td2.style.height = `${rowHeight}px`; // Apply row height to textarea2
+    //     }
+    //   });
+    // },
+
+    setRowHeights() {
+      const rows = document.querySelectorAll("tbody tr");
+
+      const adjustHeights = () => {
+        rows.forEach((row) => {
+          const rowHeight = row.clientHeight; // Get the height of the row
+          const td1 = row.querySelector(".fixedtd");
+          const td2 = row.querySelector(".fixedtd2");
+
+          if (td1 && td2) {
+            td1.style.height = `${rowHeight}px`; // Apply row height to textarea1
+            td2.style.height = `${rowHeight}px`; // Apply row height to textarea2
+          }
+        });
+      };
+
+      // Initial call to adjust heights
+      adjustHeights();
+
+      // Listen for window resize and readjust heights
+      window.addEventListener("resize", adjustHeights);
     },
 
     //----------------------------------------------------------
