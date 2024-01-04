@@ -145,7 +145,7 @@
     <div class="margin20">
       <v-row>
         <v-col cols="2">
-          <v-btn color="primary" @click="createLink(id)">Opret link</v-btn>
+          <v-btn color="primary" @click="createLink()">Opret link</v-btn>
         </v-col>
         <v-col cols="2" v-if="isAddingTemplate">
           <input
@@ -223,6 +223,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase.js";
 import { Text } from "vue";
+import { getDate } from "date-fns";
 
 export default {
   props: {
@@ -280,6 +281,7 @@ export default {
       this.modalLink = `${baseDomain}/form/${id}`;
       document.getElementById("popup-1").classList.toggle("active");
     },
+
     async createLink() {
       if (this.isAddingTemplate) {
         if (!this.newTemplateName) {
@@ -299,6 +301,7 @@ export default {
       try {
         const dataObj = {
           controlSchemeTexts: this.currentTexts,
+          changed: new Date(),
         };
         const docRef = await setDoc(controlSchemeRef, dataObj, { merge: true });
         return;

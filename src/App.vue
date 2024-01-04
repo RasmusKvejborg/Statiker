@@ -13,7 +13,7 @@
       <v-spacer></v-spacer>
       <v-btn flat color="grey" @click="navigateToHome">Hjem</v-btn>
 
-      <v-btn flat color="grey">Om NordStatik</v-btn>
+      <!-- <v-btn flat color="grey">Om NordStatik</v-btn> -->
 
       <v-btn flat color="grey" @click="navigateToAccount">Konto</v-btn>
 

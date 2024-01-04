@@ -63,3 +63,24 @@ export function formatDate(date) {
 
   return formattedDate;
 }
+
+export function formatDateWithHours(date) {
+  if (!date) return "";
+
+  const parsedDate = new Date(date);
+
+  const day = parsedDate.getDate();
+  const month = parsedDate.getMonth() + 1; // Month is zero-based
+  const year = parsedDate.getFullYear();
+
+  const hours = parsedDate.getHours();
+  const minutes = parsedDate.getMinutes();
+
+  const formattedDate = `${day}/${month}`;
+
+  if (year !== new Date().getFullYear()) {
+    return `${formattedDate} - ${year}`;
+  }
+
+  return `${formattedDate} ${hours}:${minutes}`;
+}

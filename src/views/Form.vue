@@ -118,18 +118,18 @@
 }
 .fixed2 {
   position: absolute;
-  right: 10px;
+  right: 0px;
 }
 
 .fixedtd {
   position: absolute;
-  right: 10px;
+  right: 0px;
   width: 184px;
 }
 .fixedtd2 {
   position: absolute;
-  right: 194px;
-  width: 420px;
+  right: 184px;
+  width: 430px;
 }
 .tr {
   height: 100px;
@@ -240,6 +240,7 @@ export default {
       try {
         const dataObj = {
           submittedControlData: this.rightFormData,
+          changed: new Date(),
         };
 
         const docRef = await setDoc(submittedDataRef, dataObj, { merge: true }); // opdaterer også, hvis findes i forvejen??

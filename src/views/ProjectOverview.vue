@@ -1,140 +1,140 @@
 <template>
-  <v-container fluid>
-    <h2>{{ this.projectNumber + " - " + this.projectName }}</h2>
+  <keep-alive>
+    <v-container fluid>
+      <h2>{{ this.projectNumber + " - " + this.projectName }}</h2>
 
-    <!-- ------------------modal----------------------- -->
-    <div class="popup" id="popup-1">
-      <div class="overlay" @click="togglePopup()">
-        <div class="content" @click.stop>
-          <div class="close-btn" @click="togglePopup()">&times;</div>
-          <h3>Del linket med dem, der skal udfylde kontrolskemaet</h3>
-          <br />
-          <p>
-            {{ modalLink }}
-          </p>
-          <v-btn color="primary" @click="copyToClipboard">Kopiér link</v-btn>
-          <p>{{ hiddenMessage }}</p>
-        </div>
-      </div>
-    </div>
-    <!--  --------------------------------------------->
-
-    <div>
-      <div class="margin20topbot">
-        <v-btn
-          color="primary"
-          @click="startAddingControlScheme"
-          v-if="!isAddingControl"
-          >+ Opret nyt kontrolskema</v-btn
-        >
-
-        <div v-if="isAddingControl">
-          <input
-            v-model="newControlNumber"
-            placeholder="Kontrolskema ID"
-            class="project-input"
-          />
-          <input
-            v-model="newControlName"
-            placeholder="Kontrolskema Navn"
-            class="project-input"
-          />
-          <v-btn class="my-0" color="primary" @click="saveControlScheme"
-            >Opret</v-btn
-          >
-          <v-icon class="close-button" @click="cancelAddingControlScheme"
-            >mdi-close</v-icon
-          >
-        </div>
-      </div>
-
-      <!-- skal kun vises hvis der er kontrolskemaer. -->
-      <div v-if="!controlSchemesLoaded">
-        <p>Henter fra databasen...</p>
-      </div>
-      <div v-else>
-        <div v-if="Object.keys(controlSchemes).length > 0">
-          <v-row class="project-headlines">
-            <v-col cols="3">
-              <h4>Kontrolskema navn</h4>
-            </v-col>
-            <v-col cols="3">
-              <h4>Kontrolskema ID</h4>
-            </v-col>
-
-            <v-col cols="3">
-              <h4>Sidst ændret</h4>
-            </v-col>
-
-            <v-col cols="2">
-              <h4>Oprettet</h4>
-            </v-col>
-            <v-col cols="1"> </v-col>
-          </v-row>
-
-          <div
-            v-for="(controlScheme, index) in controlSchemes"
-            :key="index"
-            class="project-container"
-            @click="
-              controlScheme.controlSchemeTexts
-                ? navigateToForm(controlScheme.id)
-                : navigateToProject(controlScheme.id)
-            "
-          >
-            <v-row>
-              <v-col cols="3">
-                {{
-                  controlScheme.controlSchemeName &&
-                  controlScheme.controlSchemeName
-                }}
-              </v-col>
-
-              <v-col cols="3">
-                {{
-                  controlScheme.controlSchemeNumber &&
-                  controlScheme.controlSchemeNumber
-                }}
-              </v-col>
-
-              <v-col cols="3"></v-col>
-              <v-col cols="2">{{
-                controlScheme.date && formatDate(controlScheme.date)
-              }}</v-col>
-
-              <v-col
-                @click.stop
-                @click="togglePopup(controlScheme.id)"
-                cols="1"
-              >
-                <button v-if="controlScheme.controlSchemeTexts">
-                  Del link
-                </button>
-              </v-col>
-            </v-row>
+      <!-- ------------------modal----------------------- -->
+      <div class="popup" id="popup-1">
+        <div class="overlay" @click="togglePopup()">
+          <div class="content" @click.stop>
+            <div class="close-btn" @click="togglePopup()">&times;</div>
+            <h3>Del linket med dem, der skal udfylde kontrolskemaet</h3>
+            <br />
+            <p>
+              {{ modalLink }}
+            </p>
+            <v-btn color="primary" @click="copyToClipboard">Kopiér link</v-btn>
+            <p>{{ hiddenMessage }}</p>
           </div>
         </div>
+      </div>
+      <!--  --------------------------------------------->
+
+      <div>
+        <div class="margin20topbot">
+          <v-btn
+            color="primary"
+            @click="startAddingControlScheme"
+            v-if="!isAddingControl"
+            >+ Opret nyt kontrolskema</v-btn
+          >
+
+          <div v-if="isAddingControl">
+            <input
+              v-model="newControlNumber"
+              placeholder="Kontrolskema ID"
+              class="project-input"
+            />
+            <input
+              v-model="newControlName"
+              placeholder="Kontrolskema Navn"
+              class="project-input"
+            />
+            <v-btn class="my-0" color="primary" @click="saveControlScheme"
+              >Opret</v-btn
+            >
+            <v-icon class="close-button" @click="cancelAddingControlScheme"
+              >mdi-close</v-icon
+            >
+          </div>
+        </div>
+
+        <!-- skal kun vises hvis der er kontrolskemaer. -->
+        <div v-if="!controlSchemesLoaded">
+          <p>Henter fra databasen...</p>
+        </div>
         <div v-else>
-          <p>
-            Der er ikke oprettet nogen kontrolskemaer endnu på dette projekt.
-          </p>
+          <div v-if="hasControlSchemes">
+            <v-row class="project-headlines">
+              <v-col cols="3">
+                <h4>Kontrolskema navn</h4>
+              </v-col>
+              <v-col cols="3">
+                <h4>Kontrolskema ID</h4>
+              </v-col>
+
+              <v-col cols="3">
+                <h4>Sidst ændret</h4>
+              </v-col>
+
+              <v-col cols="2">
+                <h4>Oprettet</h4>
+              </v-col>
+              <v-col cols="1"> </v-col>
+            </v-row>
+
+            <div
+              v-for="(controlScheme, index) in controlSchemes"
+              :key="index"
+              class="project-container"
+              @click="
+                controlScheme.controlSchemeTexts
+                  ? navigateToForm(controlScheme.id)
+                  : navigateToProject(controlScheme.id)
+              "
+            >
+              <v-row>
+                <v-col cols="3">
+                  {{
+                    controlScheme.controlSchemeName &&
+                    controlScheme.controlSchemeName
+                  }}
+                </v-col>
+
+                <v-col cols="3">
+                  {{
+                    controlScheme.controlSchemeNumber &&
+                    controlScheme.controlSchemeNumber
+                  }}
+                </v-col>
+
+                <v-col cols="3">
+                  {{
+                    controlScheme.changed &&
+                    formatDateWithHours(controlScheme.changed)
+                  }}
+                </v-col>
+                <v-col cols="2">{{
+                  controlScheme.date && formatDate(controlScheme.date)
+                }}</v-col>
+
+                <v-col
+                  @click.stop
+                  @click="togglePopup(controlScheme.id)"
+                  cols="1"
+                >
+                  <button v-if="controlScheme.controlSchemeTexts">
+                    Del link
+                  </button>
+                </v-col>
+              </v-row>
+            </div>
+          </div>
+          <div v-else>
+            <p>
+              Der er ikke oprettet nogen kontrolskemaer endnu på dette projekt.
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  </v-container>
+    </v-container>
+  </keep-alive>
 </template>
 
 <script>
 import { db } from "../firebase.js";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  querym,
-  doc,
-  getDoc,
-} from "firebase/firestore";
-import { formatDate } from "../components/utils.js";
+import { collection, addDoc, getDocs } from "firebase/firestore";
+import { formatDate, formatDateWithHours } from "../components/utils.js";
 
 export default {
   props: {
@@ -142,6 +142,13 @@ export default {
     projectName: String,
     projectNumber: String,
     userId: String,
+  },
+
+  computed: {
+    // Add a computed property to check if controlSchemes are available
+    hasControlSchemes() {
+      return Object.keys(this.controlSchemes).length > 0;
+    },
   },
 
   data() {
@@ -224,11 +231,9 @@ export default {
     // -- end of save control scheme end ---
 
     async fetchControlSchemes() {
-      console.log("this happens");
-
-      const collectionRef = collection(db, "controlSchemes");
-
       try {
+        console.log("this happens: fetchcontrolschemes");
+        const collectionRef = collection(db, "controlSchemes");
         const querySnapshot = await getDocs(collectionRef);
 
         const controlSchemesList = [];
@@ -250,7 +255,11 @@ export default {
                   ? data.controlSchemeTexts
                   : null,
                 date: data.date ? data.date.toDate() : null, // Convert to Date object
+                changed: data.changed ? data.changed.toDate() : null,
               };
+              // if (data.changed) {
+              //   console.log("testersss " + data.changed.toDate());
+              // }
               controlSchemesList.push(controlScheme);
             }
           }
@@ -268,6 +277,10 @@ export default {
     // ----- end of fetchControlSchemes-----
     formatDate(date) {
       return formatDate(date);
+    },
+
+    formatDateWithHours(date) {
+      return formatDateWithHours(date);
     },
 
     navigateToControlScheme(controlSchemeId) {
@@ -301,8 +314,12 @@ export default {
       });
     },
   },
-  created() {
+  // created() {
+  //   this.fetchControlSchemes();
+  // },
+  mounted() {
     this.fetchControlSchemes();
+    console.log("projectOverview has been mounted");
   },
 };
 </script>
