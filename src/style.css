@@ -41,6 +41,10 @@ td {
   padding-inline: 8px;
 }
 
+textarea {
+  resize: none !important;
+}
+
 button + button {
   margin-left: 10px; /* Adjust margin as needed */
 }

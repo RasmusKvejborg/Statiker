@@ -311,9 +311,7 @@ export default {
       });
     },
   },
-  // created() {
-  //   this.fetchControlSchemes();
-  // },
+
   mounted() {
     this.fetchControlSchemes();
     console.log("projectOverview has been mounted");

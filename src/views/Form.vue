@@ -99,9 +99,20 @@
       <!-- --------------------oversigt slut ------------------------->
 
       <div>
-        <v-btn color="primary" @click="saveSubmittedData">Indsend</v-btn>
+        <!-- indsend knap -->
+        <v-btn
+          :color="showSuccess ? undefined : 'primary'"
+          :class="{ 'success-button': showSuccess }"
+          @click="saveSubmittedData"
+          style="width: 105px"
+        >
+          <span v-if="showSuccess">GEMT</span>
+          <span v-else>Indsend</span></v-btn
+        >
+
+        <!-- download pdf -->
         <download-button
-          class="action-button"
+          color="#FF0000"
           dom="#resultPrinted"
           :name="controlSchemeNumber + ' - ' + controlSchemeName"
           :userId="userId"
@@ -150,13 +161,16 @@
 .textarea {
   width: 100%;
   height: 100%;
-  resize: none;
 }
 
 .textarea2 {
   width: 100%;
   height: 100%;
-  resize: none;
+}
+
+.success-button {
+  background-color: green;
+  /* Other styling for the green button */
 }
 </style>
 
@@ -235,12 +249,9 @@ export default {
         },
       },
       loading: true,
+      showSuccess: false,
     };
   },
-
-  // created() {
-  //   this.fetchLeftAndRightTexts();
-  // },
 
   mounted() {
     this.fetchLeftAndRightTexts(); // Ensure data is fetched first
@@ -274,7 +285,12 @@ export default {
 
         const docRef = await setDoc(submittedDataRef, dataObj, { merge: true }); // opdaterer også, hvis findes i forvejen??
 
-        alert("Dataen er gemt");
+        this.showSuccess = true;
+        setTimeout(() => {
+          console.log("DET HER SKER");
+          this.showSuccess = false;
+        }, 2000);
+
         return;
       } catch (error) {
         console.error("Error adding/updating field in the project:", error);
