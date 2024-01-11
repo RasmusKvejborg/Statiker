@@ -67,9 +67,9 @@
                   v-model="currentTexts['B' + index]['Header 2'][key]"
                 ></textarea>
               </td>
-              <!--  -->
+              <!-- tidspunkt: -->
               <td>
-                <textarea
+                <input
                   class="invisible-input width100 needs-padding"
                   :list="
                     index === 1
@@ -79,7 +79,7 @@
                       : ''
                   "
                   v-model="currentTexts['B' + index]['Header 3'][key]"
-                ></textarea>
+                />
 
                 <datalist id="tidspunkt-b1">
                   <option value="Inden produktion."></option>

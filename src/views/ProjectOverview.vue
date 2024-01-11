@@ -57,10 +57,10 @@
           <div v-if="hasControlSchemes">
             <v-row class="project-headlines">
               <v-col cols="3">
-                <h4>Kontrolskema navn</h4>
+                <h4>Kontrolskema ID</h4>
               </v-col>
               <v-col cols="3">
-                <h4>Kontrolskema ID</h4>
+                <h4>Kontrolskema navn</h4>
               </v-col>
 
               <v-col cols="3">
@@ -86,15 +86,15 @@
               <v-row>
                 <v-col cols="3">
                   {{
-                    controlScheme.controlSchemeName &&
-                    controlScheme.controlSchemeName
+                    controlScheme.controlSchemeNumber &&
+                    controlScheme.controlSchemeNumber
                   }}
                 </v-col>
 
                 <v-col cols="3">
                   {{
-                    controlScheme.controlSchemeNumber &&
-                    controlScheme.controlSchemeNumber
+                    controlScheme.controlSchemeName &&
+                    controlScheme.controlSchemeName
                   }}
                 </v-col>
 

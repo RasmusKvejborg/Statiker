@@ -122,6 +122,11 @@
   </v-container>
 </template>
 
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=.5, maximum-scale=2.0, minimum-scale=.25, user-scalable=yes"
+/>
+
 <style scoped>
 .container {
   overflow-x: scroll;

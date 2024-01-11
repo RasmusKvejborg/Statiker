@@ -24,7 +24,7 @@ export default {
 
       const invoice = document.querySelector(me.dom);
       var opt = {
-        margin: [2, 2, 2, 2], // top, left, bot, right
+        margin: [2, 2, 29, 2], // top, left, bot, right. Men måske skal top bruges nogle gange for at få bunden til at se rigtig ud..
         filename: "testname44.pdf",
         pagebreak: { mode: "avoid-all" },
         html2canvas: { useCORS: true },
@@ -48,9 +48,9 @@ export default {
           console.log("Image width:", naturalWidth);
           console.log("Image height:", naturalHeight);
 
-          // Conditionally adjust height if it exceeds 50 pixels
-          var maxHeight = 50; // juster denne for at ændre logo størrelse
+          var maxHeight = 25; // juster denne for at ændre logo størrelse
 
+          // Conditionally adjust height if it exceeds 25 pixels
           if (naturalHeight > maxHeight) {
             const ratio = maxHeight / naturalHeight;
             naturalHeight = maxHeight; // Set the height to 50 pixels
@@ -70,8 +70,8 @@ export default {
                 pdf.setTextColor(100);
                 pdf.text(
                   "Side " + i + " af " + totalPages,
-                  pdf.internal.pageSize.getWidth() - 25,
-                  pdf.internal.pageSize.getHeight() - 4
+                  pdf.internal.pageSize.getWidth() - 25, // 25 er vel bare hvor langt til siden den skal
+                  pdf.internal.pageSize.getHeight() - 4 // 4 er vel bare hvor langt op
                 );
                 // var photoheight = 20;
                 pdf.addImage(
