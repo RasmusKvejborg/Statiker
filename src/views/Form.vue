@@ -124,8 +124,7 @@
 
 <meta
   name="viewport"
-  content="width=device-width, initial-scale=.5, maximum-scale=2.0, minimum-scale=.25, user-scalable=yes"
-/>
+  content="width=device-width, initial-scale=.1, maximum-scale=1.2, user-scalable=yes"></meta>
 
 <style scoped>
 .container {
