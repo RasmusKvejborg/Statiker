@@ -6,8 +6,23 @@
       blev oprettet. Rediger-funktion kommer senere
     </div> -->
     <div v-else>
+      <!-- vædhæft billede -->
+      <div style="position: fixed; right: 50px">
+        <v-btn onclick="document.getElementById('getFile').click()">
+          Vedhæft billeder
+        </v-btn>
+        <input
+          type="file"
+          id="getFile"
+          @change="onFileSelected"
+          style="display: none"
+        />
+        <p v-if="successMessage" style="color: green">{{ successMessage }}</p>
+      </div>
+
       <div id="resultPrinted">
         <h2>{{ controlSchemeNumber + " - " + controlSchemeName }}</h2>
+
         <div v-for="index in 6" :key="index" class="controlschemes">
           <div class="marginTopAndBot10">
             <h3>B{{ index }}: {{ headerTexts["B" + index] }}</h3>
@@ -191,6 +206,7 @@ import {
   doc,
   setDoc,
 } from "firebase/firestore";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { db } from "../firebase.js";
 import DownloadButton from "../components/DownloadButton";
 
@@ -256,6 +272,8 @@ export default {
       },
       loading: true,
       showSuccess: false,
+      selectedFile: null,
+      successMessage: "",
     };
   },
 
@@ -280,6 +298,42 @@ export default {
 
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
+    async onFileSelected(event) {
+      this.selectedFile = event.target.files[0];
+
+      if (
+        this.selectedFile.type != "image/png" &&
+        this.selectedFile.type != "image/jpeg"
+      ) {
+        alert("billede skal være i .PNG eller .JPG format");
+        return;
+      }
+
+      if (!this.selectedFile) {
+        alert("Please select a file to upload");
+        return;
+      }
+
+      if (this.selectedFile.size > 1000000) {
+        console.log("Compressing file...");
+      }
+
+      const storage = getStorage();
+      const storageRef = ref(
+        storage,
+        `FormImages/${this.parameter}/${this.selectedFile.name}`
+      );
+
+      try {
+        await uploadBytes(storageRef, this.selectedFile);
+        // alert("Billedet er uploadet og vil fremgå på PDF dokumenter");
+        this.successMessage = "Billedet er vedhæftet";
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        alert("Fejl med upload af logo: " + error);
+      }
+    },
+
     async saveSubmittedData() {
       const submittedDataRef = doc(db, "controlSchemes", this.parameter); // parameter er i dette tilfælde controlSchemeId
 

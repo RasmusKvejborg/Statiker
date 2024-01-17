@@ -44,20 +44,6 @@ export default {
         this.canUpload = false;
       }
 
-      // //tjek på image højde:
-
-      // const img = new Image();
-      // img.src = URL.createObjectURL(this.selectedFile);
-
-      // img.onload = () => {
-      //   if (img.height > 600) {
-      //     alert("Billedhøjden må ikke overstige 600 pixels.");
-      //     this.canUpload = false;
-      //   }
-      // };
-
-      // // --------------
-
       if (event.target.files[0].size > 1000000) {
         alert("filen er for stor. Maks er 1 mb");
         this.canUpload = false;
