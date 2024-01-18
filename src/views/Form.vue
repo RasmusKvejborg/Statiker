@@ -209,6 +209,7 @@ import {
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { db } from "../firebase.js";
 import DownloadButton from "../components/DownloadButton";
+import imageCompression from "browser-image-compression";
 
 export default {
   props: {
@@ -314,8 +315,28 @@ export default {
         return;
       }
 
-      if (this.selectedFile.size > 1000000) {
+      if (this.selectedFile.size > 4) {
+        // 00000
         console.log("Compressing file...");
+        // this.selectedFile = await this.compressImage();
+
+        try {
+          const options = {
+            maxSizeMB: 0.5, // Adjust this value based on your requirements
+            maxWidthOrHeight: 400,
+            useWebWorker: true,
+          };
+
+          // Compress the image
+          this.selectedFile = await imageCompression(
+            this.selectedFile,
+            options
+          );
+        } catch (error) {
+          console.error("Error compressing file:", error);
+          // Handle the error, for example, show an alert
+          alert("Error compressing file: " + error.message);
+        }
       }
 
       const storage = getStorage();
@@ -334,6 +355,29 @@ export default {
       }
     },
 
+    // async compressImage() {
+    //   try {
+    //     // Compressor settings
+    //     const compressorSettings = {
+    //       maxWidth: 100,
+    //       maxHeight: 100,
+    //       quality: 0.6,
+    //     };
+
+    //     // Compress the image
+    //     const compressedBlob = await compress(
+    //       this.selectedFile,
+    //       compressorSettings
+    //     );
+
+    //     // Use the compressed image for further processing or uploading
+    //     this.selectedFile = new File([compressedBlob], this.selectedFile.name);
+    //   } catch (error) {
+    //     console.error("Error compressing image:", error);
+    //     alert("Error compressing image: " + error.message);
+    //   }
+    // },
+
     async saveSubmittedData() {
       const submittedDataRef = doc(db, "controlSchemes", this.parameter); // parameter er i dette tilfælde controlSchemeId
 
@@ -347,7 +391,6 @@ export default {
 
         this.showSuccess = true;
         setTimeout(() => {
-          console.log("DET HER SKER");
           this.showSuccess = false;
         }, 2000);
 
