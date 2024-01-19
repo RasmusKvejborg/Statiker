@@ -6,23 +6,42 @@
       blev oprettet. Rediger-funktion kommer senere
     </div> -->
     <div v-else>
-      <!-- vædhæft billede -->
-      <div style="position: fixed; right: 50px">
-        <v-btn onclick="document.getElementById('getFile').click()">
-          Vedhæft billeder
-        </v-btn>
-        <input
-          type="file"
-          id="getFile"
-          @change="onFileSelected"
-          style="display: none"
-        />
-        <p v-if="successMessage" style="color: green">{{ successMessage }}</p>
-      </div>
+      <v-row>
+        <v-col cols="7">
+          <h2>{{ controlSchemeNumber + " - " + controlSchemeName }}</h2>
+        </v-col>
+        <v-col cols="3">
+          <!-- vædhæft billede -->
+          <!-- <div style="position: fixed; right: 150px"> -->
+          <v-btn onclick="document.getElementById('getFile').click()">
+            Vedhæft billeder
+          </v-btn>
+          <input
+            type="file"
+            id="getFile"
+            @change="onFileSelected"
+            style="display: none"
+          />
+          <p v-if="successMessage" style="color: green">
+            {{ successMessage }}
+          </p>
 
+          <div v-if="imageUrls?.length > 0">
+            <h5>Vedhæftede billeder:</h5>
+
+            <a
+              v-for="(imageUrl, index) in imageUrls"
+              :key="imageUrl"
+              :href="imageUrl"
+              target="_blank"
+              style="display: block"
+            >
+              Billede {{ index + 1 }}
+            </a>
+          </div>
+        </v-col>
+      </v-row>
       <div id="resultPrinted">
-        <h2>{{ controlSchemeNumber + " - " + controlSchemeName }}</h2>
-
         <div v-for="index in 6" :key="index" class="controlschemes">
           <div class="marginTopAndBot10">
             <h3>B{{ index }}: {{ headerTexts["B" + index] }}</h3>
@@ -206,7 +225,14 @@ import {
   doc,
   setDoc,
 } from "firebase/firestore";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  listAll,
+  storageRef,
+  getDownloadURL,
+} from "firebase/storage";
 import { db } from "../firebase.js";
 import DownloadButton from "../components/DownloadButton";
 import imageCompression from "browser-image-compression";
@@ -275,11 +301,13 @@ export default {
       showSuccess: false,
       selectedFile: null,
       successMessage: "",
+      imageUrls: [],
     };
   },
 
   mounted() {
     this.fetchLeftAndRightTexts(); // Ensure data is fetched first
+    this.fetchImages();
   },
 
   // det her er for at kalde setRowHeights efter DOM'en findes.
@@ -325,6 +353,7 @@ export default {
             maxSizeMB: 0.5, // Adjust this value based on your requirements
             maxWidthOrHeight: 400,
             useWebWorker: true,
+            maxIteration: 5,
           };
 
           // Compress the image
@@ -348,6 +377,14 @@ export default {
       try {
         await uploadBytes(storageRef, this.selectedFile);
         // alert("Billedet er uploadet og vil fremgå på PDF dokumenter");
+
+        const imageUrl = await getDownloadURL(storageRef);
+
+        console.log("IUMAGFS", imageUrl);
+
+        // Push the imageUrl to the imageUrls array, så jeg ikke skal fetche hver gang der oploades.
+        this.imageUrls.push(imageUrl);
+
         this.successMessage = "Billedet er vedhæftet";
       } catch (error) {
         console.error("Error uploading file:", error);
@@ -355,28 +392,23 @@ export default {
       }
     },
 
-    // async compressImage() {
-    //   try {
-    //     // Compressor settings
-    //     const compressorSettings = {
-    //       maxWidth: 100,
-    //       maxHeight: 100,
-    //       quality: 0.6,
-    //     };
+    async fetchImages() {
+      try {
+        const storage = getStorage();
+        const userImageRef = ref(storage, `FormImages/${this.parameter}/`);
 
-    //     // Compress the image
-    //     const compressedBlob = await compress(
-    //       this.selectedFile,
-    //       compressorSettings
-    //     );
+        listAll(userImageRef).then(async (res) => {
+          const { items } = res;
+          const urls = await Promise.all(
+            items.map((item) => getDownloadURL(item))
+          );
 
-    //     // Use the compressed image for further processing or uploading
-    //     this.selectedFile = new File([compressedBlob], this.selectedFile.name);
-    //   } catch (error) {
-    //     console.error("Error compressing image:", error);
-    //     alert("Error compressing image: " + error.message);
-    //   }
-    // },
+          this.imageUrls = urls;
+        });
+      } catch (error) {
+        throw new Error("Failed to fetch image URL: " + error);
+      }
+    },
 
     async saveSubmittedData() {
       const submittedDataRef = doc(db, "controlSchemes", this.parameter); // parameter er i dette tilfælde controlSchemeId
