@@ -351,7 +351,7 @@ export default {
         try {
           const options = {
             maxSizeMB: 0.5, // Adjust this value based on your requirements
-            maxWidthOrHeight: 800,
+            maxWidthOrHeight: 2048,
             useWebWorker: true,
             maxIteration: 10,
           };
