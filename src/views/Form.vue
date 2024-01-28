@@ -351,9 +351,9 @@ export default {
         try {
           const options = {
             maxSizeMB: 0.5, // Adjust this value based on your requirements
-            maxWidthOrHeight: 400,
+            maxWidthOrHeight: 800,
             useWebWorker: true,
-            maxIteration: 5,
+            maxIteration: 10,
           };
 
           // Compress the image
