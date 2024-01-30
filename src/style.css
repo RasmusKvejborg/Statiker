@@ -66,7 +66,7 @@ table tbody tr:nth-child(even) {
   border-radius: 5px;
   background-color: #fff;
   color: #333;
-  margin-right: 10px; /* Add some spacing between the input and button */
+  margin-right: 10px; /* Add some spacinwg between the input and button */
 }
 
 .project-container {
@@ -159,8 +159,9 @@ table tbody tr:nth-child(even) {
   border: none; /* Remove the border */
   background: none; /* Remove the background */
   outline: none; /* Remove the outline when focused */
-  resize: vertical; /* Allow vertical resizing */
-  overflow-y: auto; /* Add vertical scroll when the content exceeds the height */
+  resize: vertical;
+  overflow-y: auto;
+  height: 100%;
 }
 
 .invisible-input::-webkit-calendar-picker-indicator {
@@ -169,6 +170,10 @@ table tbody tr:nth-child(even) {
 
 .width100 {
   width: 100%;
+}
+
+.width150px {
+  width: 150px;
 }
 
 .delete {

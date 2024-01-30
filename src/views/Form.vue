@@ -12,7 +12,6 @@
         </v-col>
         <v-col cols="3">
           <!-- vædhæft billede -->
-          <!-- <div style="position: fixed; right: 150px"> -->
           <v-btn onclick="document.getElementById('getFile').click()">
             Vedhæft billeder
           </v-btn>
@@ -141,7 +140,7 @@
           style="width: 105px"
         >
           <span v-if="showSuccess">GEMT</span>
-          <span v-else>Indsend</span></v-btn
+          <span v-else>Gem</span></v-btn
         >
 
         <!-- download pdf -->

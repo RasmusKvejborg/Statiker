@@ -33,7 +33,7 @@
             <input
               v-model="newControlNumber"
               placeholder="Kontrolskema ID"
-              class="project-input"
+              class="project-input width150px"
             />
             <input
               v-model="newControlName"

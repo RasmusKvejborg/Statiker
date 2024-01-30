@@ -20,9 +20,8 @@ export default {
   methods: {
     async downloadFile() {
       const me = this;
-      console.log(me.name);
 
-      const invoice = document.querySelector(me.dom);
+      const dom = document.querySelector(me.dom);
       var opt = {
         margin: [2, 2, 29, 2], // top, left, bot, right. Men måske skal top bruges nogle gange for at få bunden til at se rigtig ud..
         filename: "testname44.pdf",
@@ -36,17 +35,12 @@ export default {
 
       try {
         const imageUrl = await this.getImageUrl();
-        console.log(imageUrl);
         const img = new Image();
         img.crossOrigin = "anonymous";
         img.src = imageUrl;
         img.onload = () => {
           let naturalWidth = img.naturalWidth; // Get image width
           let naturalHeight = img.naturalHeight; // Get image height
-
-          // Use the dimensions as required
-          console.log("Image width:", naturalWidth);
-          console.log("Image height:", naturalHeight);
 
           var maxHeight = 25; // juster denne for at ændre logo størrelse
 
@@ -58,7 +52,7 @@ export default {
           }
 
           html2pdf()
-            .from(invoice)
+            .from(dom)
             .set(opt)
             .toPdf()
             .get("pdf")
@@ -73,7 +67,6 @@ export default {
                   pdf.internal.pageSize.getWidth() - 25, // 25 er vel bare hvor langt til siden den skal
                   pdf.internal.pageSize.getHeight() - 4 // 4 er vel bare hvor langt op
                 );
-                // var photoheight = 20;
                 pdf.addImage(
                   img,
                   "PNG",
