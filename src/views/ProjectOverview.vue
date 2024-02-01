@@ -3,7 +3,7 @@
     <v-container fluid>
       <h2>{{ this.projectNumber + " - " + this.projectName }}</h2>
 
-      <!-- ------------------modal----------------------- -->
+      <!-- ------------------popup modal copy sharable link----------------------- -->
       <div class="popup" id="popup-1">
         <div class="overlay" @click="togglePopup()">
           <div class="content" @click.stop>
@@ -18,7 +18,58 @@
           </div>
         </div>
       </div>
-      <!--  --------------------------------------------->
+      <!--  ------------------popup modal edit control scheme--------------------------->
+      <div class="popup" id="popup-2">
+        <div class="overlay" @click="toggleEditingPopup()">
+          <div class="content" @click.stop>
+            <div class="close-btn" @click="toggleEditingPopup()">&times;</div>
+            <h3>Rediger kontrolskema</h3>
+            <div class="input-group">
+              <label for="controlNumber">Kontrolskema ID</label>
+              <input
+                id="controlNumber"
+                type="text"
+                v-model="editControlScheme.controlSchemeNumber"
+              />
+            </div>
+            <div class="input-group">
+              <label for="controlName"> Kontrolskema navn</label>
+              <input
+                id="controlName"
+                type="text"
+                v-model="editControlScheme.controlSchemeName"
+              />
+            </div>
+            <div class="button-group">
+              <v-btn class="save-btn" color="primary" @click="saveEditFunction">
+                Gem
+              </v-btn>
+              <v-btn class="delete-btn" color="red" @click="confirmDelete">
+                Slet
+              </v-btn>
+              <v-dialog v-model="deleteConfirmation" max-width="290">
+                <v-card>
+                  <v-card-title>Slet dette kontrolskema?</v-card-title>
+                  <v-card-actions>
+                    <v-btn color="red" text @click="deleteControlScheme">
+                      Ja
+                    </v-btn>
+                    <v-btn @click="cancelDelete">Nej</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              <v-btn
+                class="cancel-btn"
+                color="grey"
+                @click="toggleEditingPopup()"
+              >
+                Annuller
+              </v-btn>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--  ---------------------------------------------------------------->
 
       <div>
         <div class="margin20topbot">
@@ -30,22 +81,28 @@
           >
 
           <div v-if="isAddingControl">
-            <input
-              v-model="newControlNumber"
-              placeholder="Kontrolskema ID"
-              class="project-input width150px"
-            />
-            <input
-              v-model="newControlName"
-              placeholder="Kontrolskema Navn"
-              class="project-input"
-            />
-            <v-btn class="my-0" color="primary" @click="saveControlScheme"
-              >Opret</v-btn
-            >
-            <v-icon class="close-button" @click="cancelAddingControlScheme"
-              >mdi-close</v-icon
-            >
+            <form @submit.prevent>
+              <input
+                v-model="newControlNumber"
+                placeholder="Kontrolskema ID"
+                class="project-input width150px"
+              />
+              <input
+                v-model="newControlName"
+                placeholder="Kontrolskema Navn"
+                class="project-input"
+              />
+              <v-btn
+                type="submit"
+                class="my-0"
+                color="primary"
+                @click="saveControlScheme"
+                >Opret</v-btn
+              >
+              <v-icon class="close-button" @click="cancelAddingControlScheme"
+                >mdi-close</v-icon
+              >
+            </form>
           </div>
         </div>
 
@@ -63,7 +120,7 @@
                 <h4>Kontrolskema navn</h4>
               </v-col>
 
-              <v-col cols="3">
+              <v-col cols="2">
                 <h4>Sidst ændret</h4>
               </v-col>
 
@@ -98,7 +155,7 @@
                   }}
                 </v-col>
 
-                <v-col cols="3">
+                <v-col cols="2">
                   {{
                     controlScheme.changed &&
                     formatDateWithHours(controlScheme.changed)
@@ -108,13 +165,15 @@
                   controlScheme.date && formatDate(controlScheme.date)
                 }}</v-col>
 
-                <v-col
-                  @click.stop
-                  @click="togglePopup(controlScheme.id)"
-                  cols="1"
-                >
-                  <button v-if="controlScheme.controlSchemeTexts">
-                    Del link
+                <v-col @click.stop cols="2">
+                  <button @click="toggleEditingPopup(controlScheme)">
+                    <v-icon>mdi-pencil</v-icon>
+                  </button>
+                  <button
+                    @click="togglePopup(controlScheme.id)"
+                    v-if="controlScheme.controlSchemeTexts"
+                  >
+                    <v-icon>mdi-link</v-icon>
                   </button>
                 </v-col>
               </v-row>
@@ -133,7 +192,15 @@
 
 <script>
 import { db } from "../firebase.js";
-import { collection, addDoc, getDocs, where, query } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  where,
+  query,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { formatDate, formatDateWithHours } from "../components/utils.js";
 
 export default {
@@ -160,6 +227,9 @@ export default {
       modalLink: "",
       controlSchemesLoaded: false,
       hiddenMessage: "",
+      isEditing: false,
+      editControlScheme: {},
+      deleteConfirmation: false,
     };
   },
 
@@ -183,8 +253,22 @@ export default {
       this.hiddenMessage = "";
       const baseDomain = window.location.origin;
       this.modalLink = `${baseDomain}/form/${id}`;
-      console.log("closing or opening");
       document.getElementById("popup-1").classList.toggle("active");
+    },
+
+    toggleEditingPopup(controlScheme) {
+      if (controlScheme) {
+        this.editControlScheme = { ...controlScheme };
+      }
+      document.getElementById("popup-2").classList.toggle("active");
+    },
+
+    cancelDelete() {
+      this.deleteConfirmation = false; // Close the delete confirmation dialog
+    },
+
+    confirmDelete() {
+      this.deleteConfirmation = true;
     },
 
     startAddingControlScheme() {
@@ -226,9 +310,52 @@ export default {
       this.fetchControlSchemes();
       // Reset the input field and hide it
       this.cancelAddingControlScheme();
-      this.navigateToControlScheme(docRef.id);
+      // this.navigateToControlScheme(docRef.id);
     },
     // -- end of save control scheme end ---
+
+    async saveEditFunction() {
+      const number = this.editControlScheme.controlSchemeNumber.trim();
+      const name = this.editControlScheme.controlSchemeName.trim();
+
+      if (!number || !name) {
+        // Display a notification or alert to the user
+        alert("Venligst udfyld kontrolskema navn og ID.");
+        return;
+      }
+
+      const colRef = collection(db, "controlSchemes");
+      const docRef = doc(colRef, this.editControlScheme.id);
+
+      try {
+        await updateDoc(docRef, {
+          controlSchemeNumber: number,
+          controlSchemeName: name,
+          changed: new Date(),
+        });
+        this.toggleEditingPopup();
+        this.fetchControlSchemes();
+      } catch (error) {
+        console.error("Error updating control scheme:", error);
+        alert("Fejl 215: Fejl ved opdatering af kontrolskema");
+      }
+    },
+
+    async deleteControlScheme() {
+      const colRef = collection(db, "controlSchemes");
+      const docRef = doc(colRef, this.editControlScheme.id);
+      try {
+        await updateDoc(docRef, {
+          isDeleted: true,
+        });
+        this.deleteConfirmation = false;
+        this.toggleEditingPopup();
+        this.fetchControlSchemes();
+      } catch (error) {
+        console.error("Error deleting control scheme:", error);
+        alert("Fejl 216: Fejl ved sletning af kontrolskema");
+      }
+    },
 
     async fetchControlSchemes() {
       try {
@@ -240,25 +367,30 @@ export default {
         const controlSchemesList = [];
 
         querySnapshot.forEach((docSnapshot) => {
-          if (docSnapshot.exists()) {
-            const data = docSnapshot.data();
+          if (
+            !docSnapshot.data().isDeleted ||
+            docSnapshot.data().isDeleted !== true
+          ) {
+            if (docSnapshot.exists()) {
+              const data = docSnapshot.data();
 
-            const controlScheme = {
-              id: docSnapshot.id, // Include the document ID
-              controlSchemeName: data.controlSchemeName
-                ? data.controlSchemeName
-                : null,
-              controlSchemeNumber: data.controlSchemeNumber
-                ? data.controlSchemeNumber
-                : null,
-              controlSchemeTexts: data.controlSchemeTexts
-                ? data.controlSchemeTexts
-                : null,
-              date: data.date ? data.date.toDate() : null, // Convert to Date object
-              changed: data.changed ? data.changed.toDate() : null,
-            };
+              const controlScheme = {
+                id: docSnapshot.id, // Include the document ID
+                controlSchemeName: data.controlSchemeName
+                  ? data.controlSchemeName
+                  : null,
+                controlSchemeNumber: data.controlSchemeNumber
+                  ? data.controlSchemeNumber
+                  : null,
+                controlSchemeTexts: data.controlSchemeTexts
+                  ? data.controlSchemeTexts
+                  : null,
+                date: data.date ? data.date.toDate() : null, // Convert to Date object
+                changed: data.changed ? data.changed.toDate() : null,
+              };
 
-            controlSchemesList.push(controlScheme);
+              controlSchemesList.push(controlScheme);
+            }
           }
         });
 
@@ -281,7 +413,7 @@ export default {
     },
 
     navigateToControlScheme(controlSchemeId) {
-      //navigates to the /project where you can edit the control sceme
+      //navigates to the /project where you can edit the control scheme
       this.$router.push({
         name: "project",
         params: {
@@ -318,3 +450,19 @@ export default {
   },
 };
 </script>
+<style>
+input {
+  background-color: #fff; /* Set a light background color */
+  color: #333;
+  padding: 8px; /* Adjust padding as needed */
+  margin-bottom: 10px;
+  border: 1px solid #ccc; /* Add a border for better contrast */
+  border-radius: 5px;
+  box-shadow: none; /* Remove any box shadow */
+  font-size: 14px; /* Adjust font size */
+}
+
+h3 {
+  margin-bottom: 30px;
+}
+</style>
