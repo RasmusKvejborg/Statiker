@@ -113,10 +113,11 @@
         <div v-else>
           <div v-if="hasControlSchemes">
             <v-row class="project-headlines">
-              <v-col cols="3">
+              <v-col cols="3"> </v-col>
+              <v-col cols="2">
                 <h4>Kontrolskema ID</h4>
               </v-col>
-              <v-col cols="3">
+              <v-col cols="2">
                 <h4>Kontrolskema navn</h4>
               </v-col>
 
@@ -134,21 +135,32 @@
               v-for="(controlScheme, index) in controlSchemes"
               :key="index"
               class="project-container"
-              @click="
-                controlScheme.controlSchemeTexts
-                  ? navigateToForm(controlScheme.id)
-                  : navigateToProject(controlScheme.id)
-              "
             >
               <v-row>
                 <v-col cols="3">
+                  <v-btn
+                    @click="navigateToForm(controlScheme.id)"
+                    color="primary"
+                    :disabled="!controlScheme.controlSchemeTexts"
+                  >
+                    Vis
+                  </v-btn>
+                  <v-btn
+                    @click="navigateToProject(controlScheme.id)"
+                    color="secondary"
+                  >
+                    {{ controlScheme.controlSchemeTexts ? "Rediger" : "Opret" }}
+                  </v-btn>
+                </v-col>
+
+                <v-col cols="2">
                   {{
                     controlScheme.controlSchemeNumber &&
                     controlScheme.controlSchemeNumber
                   }}
                 </v-col>
 
-                <v-col cols="3">
+                <v-col cols="2">
                   {{
                     controlScheme.controlSchemeName &&
                     controlScheme.controlSchemeName
@@ -165,7 +177,7 @@
                   controlScheme.date && formatDate(controlScheme.date)
                 }}</v-col>
 
-                <v-col @click.stop cols="2">
+                <v-col @click.stop cols="1">
                   <button @click="toggleEditingPopup(controlScheme)">
                     <v-icon>mdi-pencil</v-icon>
                   </button>
@@ -358,6 +370,7 @@ export default {
     },
 
     async fetchControlSchemes() {
+      console.log("fetch kører");
       try {
         const collectionRef = collection(db, "controlSchemes");
         const querySnapshot = await getDocs(
@@ -399,7 +412,7 @@ export default {
         this.controlSchemes = controlSchemesList; // Update the projects data property
         this.controlSchemesLoaded = true; // sætter loading text til at fjerne sig
       } catch (error) {
-        console.error("Error fetching documents:", error);
+        console.log("Error fetching documents:", error);
       }
     },
 

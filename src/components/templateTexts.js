@@ -13,9 +13,9 @@ export const templateTexts = {
         1: "1",
         2: "2",
         3: "3",
-        4: 4,
-        5: 5,
-        6: 6,
+        4: "4",
+        5: "5",
+        6: "6",
       },
       "Header 4": {
         1: "Uafhængig kontrollant udfører kontrol af egenkontrol, suppleret med kontrol af udvalgte dele - som vurderes størst risiko for fejl",
@@ -136,7 +136,7 @@ export const templateTexts = {
         1: "1",
         2: "2",
         3: "3",
-        4: 4,
+        4: "4",
       },
     },
     B1: {
@@ -250,7 +250,7 @@ export const templateTexts = {
         1: "1",
         2: "2",
         3: "3",
-        4: 4,
+        4: "4",
       },
       "Header 7": {
         1: "Uafhængig kontrollant har gennemgået egenkontrollen og hvilke udvalgte dele som er udført supplerende kontrol på. Der redegøres for valget af udvalgte dele",
@@ -319,9 +319,9 @@ export const templateTexts = {
         1: "1",
         2: "2",
         3: "3",
-        4: 4,
-        5: 5,
-        6: 6,
+        4: "4",
+        5: "5",
+        6: "6",
       },
       "Header 6": {
         1: "Visuel kontrol",
@@ -392,7 +392,7 @@ export const templateTexts = {
         1: "1",
         2: "2",
         3: "3",
-        4: 4,
+        4: "4",
       },
       "Header 4": {
         1: "Uafhængig kontrollant udfører kontrol af egenkontrol, suppleret med kontrol af udvalgte dele - som vurderes størst risiko for fejl",

@@ -145,7 +145,9 @@
     <div class="margin20">
       <v-row>
         <v-col cols="2">
-          <v-btn color="primary" @click="createLink()">Opret link</v-btn>
+          <v-btn color="primary" @click="createLink()">
+            {{ hasBeenCreatedBefore ? "Gem" : "Opret link" }}
+          </v-btn>
         </v-col>
         <v-col cols="2" v-if="isAddingTemplate">
           <input
@@ -250,14 +252,40 @@ export default {
         B5: "Kontrol af udførelse",
         B6: "Slutkontrol",
       },
+      hasBeenCreatedBefore: false,
     };
   },
   created() {
     // this.fetchTemplates(); bliver kaldt i watch, når der er et userId
-    this.setCurrentText();
+    this.setCurrentText(); // sætter currenttexts til tom skabelon
+    this.fetchTexts(); // sætter currenttexts til det der er gemt tidligere (hvis noget er gemt tidligere)
   },
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
+    async fetchTexts() {
+      console.log("fetchtexts runs");
+      const docRef = doc(db, "controlSchemes", this.parameter);
+      try {
+        const docSnapshot = await getDoc(docRef);
+
+        if (docSnapshot.exists()) {
+          const docData = docSnapshot.data();
+
+          if (docData.controlSchemeTexts) {
+            this.hasBeenCreatedBefore = true;
+            this.currentTexts = docData.controlSchemeTexts;
+          }
+
+          // this.controlSchemeName = docData.controlSchemeName;
+          // this.controlSchemeNumber = docData.controlSchemeNumber;
+          // this.rightFormData = // kan bruge dette til at finde ud af om der er udfyldt noget i form
+          //   docData.submittedControlData || this.rightFormData;
+        }
+      } catch (error) {
+        console.error("Error fetching document... ", error);
+      }
+    },
+    //----------
     copyToClipboard() {
       navigator.clipboard
         .writeText(this.modalLink)
@@ -272,17 +300,26 @@ export default {
         });
     },
     setCurrentText() {
-      // her ku jeg måske sige indsæt fetched templatetexts hvis der er nogle, ellers vil den gå derind:
       this.currentTexts = templateTextsFromFile[this.selectedOption];
     },
     togglePopup(id) {
-      (this.hiddenMessage = ""), console.log("Opening With ID");
+      this.hiddenMessage = "";
       const baseDomain = window.location.origin;
       this.modalLink = `${baseDomain}/form/${id}`;
       document.getElementById("popup-1").classList.toggle("active");
     },
 
     async createLink() {
+      if (this.hasBeenCreatedBefore) {
+        // make an "are you sure"-popup here, and only continue the function if the answer is "yes"
+        const confirmed = window.confirm(
+          "Husk at give besked om ændringerne, hvis du har delt kontrolskemaet."
+        );
+        if (!confirmed) {
+          return; // Return early if the user cancels
+        }
+      }
+
       if (this.isAddingTemplate) {
         if (!this.newTemplateName) {
           alert("Du mangler at give skabelonen et navn");

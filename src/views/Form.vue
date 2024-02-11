@@ -80,7 +80,6 @@
                         {{ leftFormData["B" + index]["Header 2"][key] }}
                       </p>
                     </td>
-                    <!--  -->
                     <td>
                       <p class="wrap">
                         {{ leftFormData["B" + index]["Header 3"][key] }}
@@ -107,18 +106,18 @@
                       </p>
                     </td>
                     <div class="abosoluteContainter">
-                      <td class="fixedtd">
-                        <textarea
-                          class="textarea"
-                          v-model="rightFormData['B' + index]['datoInit'][key]"
-                        ></textarea>
-                      </td>
                       <td class="fixedtd2">
                         <textarea
                           class="textarea2"
                           v-model="
                             rightFormData['B' + index]['kontrolRes'][key]
                           "
+                        ></textarea>
+                      </td>
+                      <td class="fixedtd">
+                        <textarea
+                          class="textarea"
+                          v-model="rightFormData['B' + index]['datoInit'][key]"
                         ></textarea>
                       </td>
                     </div>
@@ -154,12 +153,6 @@
     </div>
   </v-container>
 </template>
-
-<!-- Følgende gør, så man kan zoome ud på mobilen -->
-<!-- <meta
-  name="viewport"
-  content="width=1000, initial-scale=.5, maximum-scale=1.2, user-scalable=yes"
-/> -->
 
 <style scoped>
 .container {
@@ -264,16 +257,8 @@ export default {
       rightFormData: {
         //           v-model="rightFormData['B' + index]['kontrolRes'][key]"
         B1: {
-          datoInit: {
-            1: "",
-            2: "",
-            3: "",
-          },
-          kontrolRes: {
-            1: "",
-            2: "",
-            3: "",
-          },
+          datoInit: {},
+          kontrolRes: {},
         },
         B2: {
           datoInit: {},
@@ -442,6 +427,7 @@ export default {
           const docData = docSnapshot.data();
 
           this.leftFormData = docData.controlSchemeTexts;
+          console.log("left for data: ", this.leftFormData);
           this.controlSchemeName = docData.controlSchemeName;
           this.controlSchemeNumber = docData.controlSchemeNumber;
           this.rightFormData =
@@ -453,22 +439,6 @@ export default {
         this.loading = false;
       }
     },
-
-    // rowheights method so set the height of the absolute areas to the right.
-    // setRowHeights() {
-    //   const rows = document.querySelectorAll("tbody tr");
-
-    //   rows.forEach((row) => {
-    //     const rowHeight = row.clientHeight; // Get the height of the row
-    //     const td1 = row.querySelector(".fixedtd");
-    //     const td2 = row.querySelector(".fixedtd2");
-
-    //     if (td1 && td2) {
-    //       td1.style.height = `${rowHeight}px`; // Apply row height to textarea1
-    //       td2.style.height = `${rowHeight}px`; // Apply row height to textarea2
-    //     }
-    //   });
-    // },
 
     setRowHeights() {
       const rows = document.querySelectorAll("tbody tr");

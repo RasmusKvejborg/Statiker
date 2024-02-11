@@ -75,8 +75,8 @@ table tbody tr:nth-child(even) {
   margin: 10px 0;
   padding: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  cursor: pointer; /* Change cursor to pointer on hover */
-  transition: background-color 0.3s, box-shadow 0.3s; /* Add smooth transition */
+  /* cursor: pointer; 
+  transition: background-color 0.3s, box-shadow 0.3s; */
 }
 
 .project-container:hover {
@@ -91,8 +91,6 @@ table tbody tr:nth-child(even) {
 .wrap {
   white-space: normal; /* Allow content to wrap within the table cell */
   word-wrap: break-word; /* Enable word wrapping for long words */
-  word-break: break-word; /* Enable word breaking for long words */
-  overflow-wrap: break-word; /* Alternative word wrapping */
 }
 
 .min-width {
