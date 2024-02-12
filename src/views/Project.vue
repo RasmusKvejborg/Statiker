@@ -82,7 +82,7 @@
                 />
 
                 <datalist id="tidspunkt-b1">
-                  <option value="Inden produktion."></option>
+                  <option value="Inden opstart"></option>
                 </datalist>
                 <datalist id="tidspunkt-b6">
                   <option value="Ved afslutning af kontrolafsnittet."></option>
@@ -222,6 +222,7 @@ import {
   setDoc,
   where,
   query,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase.js";
 import { Text } from "vue";
@@ -236,7 +237,7 @@ export default {
   },
   data() {
     return {
-      selectedOption: "Tom skabelon", // "Beton: Fiberarmerede",
+      selectedOption: "Tom skabelon",
       alltemplates: templateTextsFromFile,
       currentTexts: null, // opdateres i updateTemplatetexts som køres ved created
       selectedValue: null,
@@ -257,11 +258,22 @@ export default {
   },
   created() {
     // this.fetchTemplates(); bliver kaldt i watch, når der er et userId
-    this.setCurrentText(); // sætter currenttexts til tom skabelon
-    this.fetchTexts(); // sætter currenttexts til det der er gemt tidligere (hvis noget er gemt tidligere)
+    this.setCurrentText();
+    this.initializeTexts();
   },
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
+    async initializeTexts() {
+      try {
+        const textHasBeenFetched = await this.fetchTexts();
+        if (!textHasBeenFetched) {
+          this.setCurrentTextByName("Fundamenter EXC2");
+        }
+      } catch (error) {
+        console.error("Error initializing texts:", error);
+      }
+    },
+
     async fetchTexts() {
       console.log("fetchtexts runs");
       const docRef = doc(db, "controlSchemes", this.parameter);
@@ -272,8 +284,10 @@ export default {
           const docData = docSnapshot.data();
 
           if (docData.controlSchemeTexts) {
+            this.selectedOption = "Ny skabelon";
             this.hasBeenCreatedBefore = true;
             this.currentTexts = docData.controlSchemeTexts;
+            return true; // Texts exist
           }
 
           // this.controlSchemeName = docData.controlSchemeName;
@@ -281,6 +295,7 @@ export default {
           // this.rightFormData = // kan bruge dette til at finde ud af om der er udfyldt noget i form
           //   docData.submittedControlData || this.rightFormData;
         }
+        return false; // Texts do not exist
       } catch (error) {
         console.error("Error fetching document... ", error);
       }
@@ -302,6 +317,10 @@ export default {
     setCurrentText() {
       this.currentTexts = templateTextsFromFile[this.selectedOption];
     },
+    setCurrentTextByName(nameOfTemplate) {
+      this.selectedOption = nameOfTemplate;
+      this.setCurrentText();
+    },
     togglePopup(id) {
       this.hiddenMessage = "";
       const baseDomain = window.location.origin;
@@ -311,13 +330,9 @@ export default {
 
     async createLink() {
       if (this.hasBeenCreatedBefore) {
-        // make an "are you sure"-popup here, and only continue the function if the answer is "yes"
-        const confirmed = window.confirm(
+        window.confirm(
           "Husk at give besked om ændringerne, hvis du har delt kontrolskemaet."
         );
-        if (!confirmed) {
-          return; // Return early if the user cancels
-        }
       }
 
       if (this.isAddingTemplate) {
@@ -329,23 +344,36 @@ export default {
           console.log("template saved: " + this.newTemplateName);
         }
       }
-      this.addObjectToControlScheme();
+      this.overWriteObjectToControlScheme(); // turn back to addObjectToControl...?
       this.togglePopup(this.parameter);
     },
     //------ update controlschemes -----
-    async addObjectToControlScheme() {
-      const controlSchemeRef = doc(db, "controlSchemes", this.parameter); //parameter er i dette tilfælde controlSchemeId
+    // async addObjectToControlScheme() {
+    //   const controlSchemeRef = doc(db, "controlSchemes", this.parameter); //parameter er i dette tilfælde controlSchemeId
+    //   try {
+    //     const dataObj = {
+    //       controlSchemeTexts: this.currentTexts,
+    //       changed: new Date(),
+    //     };
+    //     const docRef = await setDoc(controlSchemeRef, dataObj, { merge: true });
+    //     return;
+    //   } catch (error) {
+    //     console.error("Error adding/updating field in the project:", error);
+    //   }
+    // },
+    async overWriteObjectToControlScheme() {
+      const controlSchemeRef = doc(db, "controlSchemes", this.parameter); // Assuming parameter is the controlSchemeId
       try {
-        const dataObj = {
+        await updateDoc(controlSchemeRef, {
           controlSchemeTexts: this.currentTexts,
-          changed: new Date(),
-        };
-        const docRef = await setDoc(controlSchemeRef, dataObj, { merge: true });
-        return;
+          changed: new Date(), // Optionally update a timestamp to track when the data was last changed
+        });
+        console.log("Control scheme texts updated successfully.");
       } catch (error) {
-        console.error("Error adding/updating field in the project:", error);
+        console.error("Error updating control scheme texts:", error);
       }
     },
+
     startAddingTemplate() {
       // bare til at vise navneinput
       this.isAddingTemplate = true;
@@ -367,7 +395,7 @@ export default {
     },
     // -------------removeRow-----------------
     removeRow(index, rowNumber) {
-      let numberOfHeaders = Object.keys(this.currentTexts["B" + index]).length;
+      let numberOfHeaders = Object.keys(this.currentTexts["B" + index]).length; //number of columns
       for (
         let headernumber = 1;
         headernumber <= numberOfHeaders;
@@ -377,7 +405,9 @@ export default {
           rowNumber
         ];
       }
+      console.log(this.currentTexts["B" + index]);
     },
+
     async saveTemplate() {
       const colRef = collection(db, "templates");
       const dataObj = {
