@@ -134,7 +134,7 @@
             <div
               v-for="(controlScheme, index) in controlSchemes"
               :key="index"
-              class="project-container"
+              class="project-container pointerOnHover"
             >
               <v-row>
                 <v-col cols="3">
@@ -177,7 +177,7 @@
                   controlScheme.date && formatDate(controlScheme.date)
                 }}</v-col>
 
-                <v-col @click.stop cols="1">
+                <v-col cols="1">
                   <button @click="toggleEditingPopup(controlScheme)">
                     <v-icon>mdi-pencil</v-icon>
                   </button>
@@ -372,38 +372,41 @@ export default {
     async fetchControlSchemes() {
       console.log("fetch kører");
       try {
+        console.log("111");
+
         const collectionRef = collection(db, "controlSchemes");
+        console.log("222");
+
         const querySnapshot = await getDocs(
           query(collectionRef, where("projectId", "==", this.parameter))
         );
 
+        console.log("length: ", querySnapshot.size);
         const controlSchemesList = [];
 
         querySnapshot.forEach((docSnapshot) => {
-          if (
-            !docSnapshot.data().isDeleted ||
-            docSnapshot.data().isDeleted !== true
-          ) {
-            if (docSnapshot.exists()) {
-              const data = docSnapshot.data();
+          // console.log("Processing document:", docSnapshot.id);
+          const data = docSnapshot.data();
 
+          if (data) {
+            // console.log("Document data:", data);
+
+            if (!data.isDeleted || data.isDeleted !== true) {
+              // console.log(
+              //   "Document is not deleted, adding to controlSchemesList"
+              // );
               const controlScheme = {
-                id: docSnapshot.id, // Include the document ID
-                controlSchemeName: data.controlSchemeName
-                  ? data.controlSchemeName
-                  : null,
-                controlSchemeNumber: data.controlSchemeNumber
-                  ? data.controlSchemeNumber
-                  : null,
-                controlSchemeTexts: data.controlSchemeTexts
-                  ? data.controlSchemeTexts
-                  : null,
-                date: data.date ? data.date.toDate() : null, // Convert to Date object
+                id: docSnapshot.id,
+                controlSchemeName: data.controlSchemeName || null,
+                controlSchemeNumber: data.controlSchemeNumber || null,
+                controlSchemeTexts: data.controlSchemeTexts || null,
+                date: data.date ? data.date.toDate() : null,
                 changed: data.changed ? data.changed.toDate() : null,
               };
-
               controlSchemesList.push(controlScheme);
             }
+          } else {
+            console.log("Document has no data");
           }
         });
 
@@ -411,6 +414,7 @@ export default {
 
         this.controlSchemes = controlSchemesList; // Update the projects data property
         this.controlSchemesLoaded = true; // sætter loading text til at fjerne sig
+        console.log("fetch er kørt");
       } catch (error) {
         console.log("Error fetching documents:", error);
       }
@@ -459,13 +463,12 @@ export default {
 
   mounted() {
     this.fetchControlSchemes();
-    console.log("projectOverview has been mounted");
   },
 };
 </script>
-<style>
+<style scoped>
 input {
-  background-color: #fff; /* Set a light background color */
+  background-color: #fff !important; /* Set a light background color */
   color: #333;
   padding: 8px; /* Adjust padding as needed */
   margin-bottom: 10px;
@@ -473,6 +476,11 @@ input {
   border-radius: 5px;
   box-shadow: none; /* Remove any box shadow */
   font-size: 14px; /* Adjust font size */
+}
+
+.close-btn {
+  background-color: #fff !important; /* Set background color to white */
+  color: #000; /* Set text color to black */
 }
 
 h3 {

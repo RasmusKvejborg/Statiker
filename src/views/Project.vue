@@ -25,7 +25,7 @@
     <div>
       <v-select
         v-model="selectedOption"
-        :items="Object.keys(alltemplates)"
+        :items="Object.keys(allTemplates)"
         @update:modelValue="setCurrentText()"
         class="maxwidth300"
       >
@@ -170,6 +170,9 @@
 </template>
 
 <style scoped>
+h3 {
+  margin-bottom: 0; /* Set margin-bottom to 0 to remove the default margin */
+}
 .template-input {
   padding: 8px;
   border: 1px solid #ccc;
@@ -238,7 +241,7 @@ export default {
   data() {
     return {
       selectedOption: "Tom skabelon",
-      alltemplates: templateTextsFromFile,
+      allTemplates: templateTextsFromFile,
       currentTexts: null, // opdateres i updateTemplatetexts som køres ved created
       selectedValue: null,
       isAddingTemplate: false, // Flag to show/hide the input field
@@ -275,7 +278,6 @@ export default {
     },
 
     async fetchTexts() {
-      console.log("fetchtexts runs");
       const docRef = doc(db, "controlSchemes", this.parameter);
       try {
         const docSnapshot = await getDoc(docRef);
@@ -416,7 +418,6 @@ export default {
         templateObject: this.currentTexts,
       };
       const docRef = await addDoc(colRef, dataObj);
-      console.log("project was created with ID: ", docRef.id); // DET HER SKAL JEG BRUGE
     },
     //----------------------------------------------------------
     async fetchTemplates() {
@@ -428,8 +429,7 @@ export default {
         querySnapshot.forEach((docSnapshot) => {
           if (docSnapshot.exists()) {
             const data = docSnapshot.data();
-            console.log(this.alltemplates);
-            this.alltemplates[data.templateName] = data.templateObject;
+            this.allTemplates[data.templateName] = data.templateObject;
           }
         });
       } catch (error) {

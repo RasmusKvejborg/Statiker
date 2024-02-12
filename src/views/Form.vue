@@ -427,7 +427,6 @@ export default {
           const docData = docSnapshot.data();
 
           this.leftFormData = docData.controlSchemeTexts;
-          console.log("left for data: ", this.leftFormData);
           this.controlSchemeName = docData.controlSchemeName;
           this.controlSchemeNumber = docData.controlSchemeNumber;
           this.rightFormData =

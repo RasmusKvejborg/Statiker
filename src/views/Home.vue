@@ -36,7 +36,7 @@
 
         <v-col cols="3"> </v-col>
 
-        <v-col cols="3">
+        <v-col cols="2">
           <!-- Headline 4 -->
           <h4>Oprettet</h4>
         </v-col>
@@ -45,7 +45,7 @@
       <div
         v-for="(project, index) in projects"
         :key="index"
-        class="project-container"
+        class="project-container pointerOnHover"
         @click="navigateToProject(project)"
       >
         <v-row>
@@ -59,8 +59,13 @@
 
           <v-col cols="3"> </v-col>
 
-          <v-col cols="3">
+          <v-col cols="2">
             {{ project.date && formatDate(project.date) }}
+          </v-col>
+          <v-col @click.stop cols="1">
+            <button>
+              <v-icon>mdi-pencil</v-icon>
+            </button>
           </v-col>
         </v-row>
       </div>
