@@ -5,9 +5,9 @@
 
       <!-- ------------------popup modal copy sharable link----------------------- -->
       <div class="popup" id="popup-1">
-        <div class="overlay" @click="togglePopup()">
+        <div class="overlay" @click="toggleLinkPopup()">
           <div class="content" @click.stop>
-            <div class="close-btn" @click="togglePopup()">&times;</div>
+            <div class="close-btn" @click="toggleLinkPopup()">&times;</div>
             <h3>Del linket med dem, der skal udfylde kontrolskemaet</h3>
             <br />
             <p>
@@ -134,7 +134,7 @@
             <div
               v-for="(controlScheme, index) in controlSchemes"
               :key="index"
-              class="project-container pointerOnHover"
+              class="project-container"
             >
               <v-row>
                 <v-col cols="3">
@@ -181,8 +181,9 @@
                   <button @click="toggleEditingPopup(controlScheme)">
                     <v-icon>mdi-pencil</v-icon>
                   </button>
+
                   <button
-                    @click="togglePopup(controlScheme.id)"
+                    @click="toggleLinkPopup(controlScheme.id)"
                     v-if="controlScheme.controlSchemeTexts"
                   >
                     <v-icon>mdi-link</v-icon>
@@ -261,7 +262,7 @@ export default {
           });
     },
 
-    togglePopup(id) {
+    toggleLinkPopup(id) {
       this.hiddenMessage = "";
       const baseDomain = window.location.origin;
       this.modalLink = `${baseDomain}/form/${id}`;
@@ -469,12 +470,11 @@ export default {
 <style scoped>
 input {
   background-color: #fff !important; /* Set a light background color */
-  color: #333;
+  color: #333 !important;
   padding: 8px; /* Adjust padding as needed */
   margin-bottom: 10px;
   border: 1px solid #ccc; /* Add a border for better contrast */
   border-radius: 5px;
-  box-shadow: none; /* Remove any box shadow */
   font-size: 14px; /* Adjust font size */
 }
 
