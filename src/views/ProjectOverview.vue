@@ -370,6 +370,7 @@ export default {
       }
     },
 
+    // ----- end of fetchControlSchemes-----
     async fetchControlSchemes() {
       console.log("fetch kører");
       try {
@@ -386,16 +387,10 @@ export default {
         const controlSchemesList = [];
 
         querySnapshot.forEach((docSnapshot) => {
-          // console.log("Processing document:", docSnapshot.id);
           const data = docSnapshot.data();
 
           if (data) {
-            // console.log("Document data:", data);
-
             if (!data.isDeleted || data.isDeleted !== true) {
-              // console.log(
-              //   "Document is not deleted, adding to controlSchemesList"
-              // );
               const controlScheme = {
                 id: docSnapshot.id,
                 controlSchemeName: data.controlSchemeName || null,
@@ -406,8 +401,6 @@ export default {
               };
               controlSchemesList.push(controlScheme);
             }
-          } else {
-            console.log("Document has no data");
           }
         });
 
@@ -420,8 +413,6 @@ export default {
         console.log("Error fetching documents:", error);
       }
     },
-
-    // ----- end of fetchControlSchemes-----
     formatDate(date) {
       return formatDate(date);
     },

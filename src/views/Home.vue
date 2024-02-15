@@ -251,11 +251,15 @@ export default {
     async fetchData() {
       console.log("user: " + this.userId);
       const collectionRef = collection(db, "projects");
+      console.log("fetchData 111");
 
       try {
+        console.log("fetchData 222");
+
         const querySnapshot = await getDocs(
           query(collectionRef, where("accountId", "==", this.userId))
         );
+        console.log("fetchData 333");
 
         const projectList = [];
 
