@@ -5,6 +5,7 @@ import ProjectOverview from "../views/ProjectOverview.vue";
 import Register from "../views/Register.vue";
 import Login from "../views/Login.vue";
 import Account from "../views/Account.vue";
+import Pdf from "../views/Pdf.vue";
 
 import Home from "../views/Home.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -43,6 +44,15 @@ const routes = [
     name: "form",
     component: Form,
     props: true,
+  },
+  {
+    path: "/pdf/:parameter",
+    name: "pdf",
+    component: Pdf,
+    props: true,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/register",

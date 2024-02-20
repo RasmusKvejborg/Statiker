@@ -113,7 +113,7 @@
         <div v-else>
           <div v-if="hasControlSchemes">
             <v-row class="project-headlines">
-              <v-col cols="3"> </v-col>
+              <v-col cols="4"> </v-col>
               <v-col cols="2">
                 <h4>Kontrolskema ID</h4>
               </v-col>
@@ -125,7 +125,7 @@
                 <h4>Sidst ændret</h4>
               </v-col>
 
-              <v-col cols="2">
+              <v-col cols="1">
                 <h4>Oprettet</h4>
               </v-col>
               <v-col cols="1"> </v-col>
@@ -137,7 +137,7 @@
               class="project-container"
             >
               <v-row>
-                <v-col cols="3">
+                <v-col cols="4">
                   <v-btn
                     @click="navigateToForm(controlScheme.id)"
                     color="primary"
@@ -150,6 +150,15 @@
                     color="secondary"
                   >
                     {{ controlScheme.controlSchemeTexts ? "Rediger" : "Opret" }}
+                  </v-btn>
+
+                  <v-btn
+                    v-if="controlScheme.controlSchemeTexts"
+                    @click="navigateToPdf(controlScheme.id)"
+                    color="#FF8C9D"
+                    style="color: white"
+                  >
+                    PDF
                   </v-btn>
                 </v-col>
 
@@ -173,7 +182,7 @@
                     formatDateWithHours(controlScheme.changed)
                   }}
                 </v-col>
-                <v-col cols="2">{{
+                <v-col cols="1">{{
                   controlScheme.date && formatDate(controlScheme.date)
                 }}</v-col>
 
@@ -441,6 +450,13 @@ export default {
         params: { parameter: controlSchemeId },
       });
     },
+    navigateToPdf(controlSchemeId) {
+      this.$router.push({
+        name: "pdf",
+        params: { parameter: controlSchemeId },
+      });
+    },
+
     navigateToProject(controlSchemeId) {
       this.$router.push({
         name: "project",

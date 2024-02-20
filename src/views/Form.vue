@@ -21,31 +21,24 @@
             @change="onFileSelected"
             style="display: none"
           />
-          <p v-if="successMessage" style="color: green">
-            {{ successMessage }}
-          </p>
 
           <div v-if="imageUrls?.length > 0">
             <h5>Vedhæftede billeder:</h5>
-
-            <!-- <a
-              v-for="(imageUrl, index) in imageUrls"
-              :key="imageUrl"
-              :href="imageUrl"
-              target="_blank"
-              style="display: block"
-            >
-              Billede {{ index + 1 }}
-            </a> -->
-            <a
-              v-for="(imageUrl, index) in imageUrls"
-              :key="index"
-              href="#"
-              @click.prevent="openModal(imageUrl)"
-              style="display: block"
-            >
-              Billede {{ index + 1 }}
-            </a>
+            <div>
+              <a
+                v-for="(imageUrl, index) in imageUrls"
+                :key="index"
+                href="#"
+                @click.prevent="openModal(imageUrl)"
+                style="
+                  display: inline-block;
+                  margin-right: 20px;
+                  margin-bottom: 5px;
+                "
+              >
+                Billede {{ index + 1 }}
+              </a>
+            </div>
           </div>
         </v-col>
       </v-row>
@@ -66,7 +59,7 @@
                     <th class="no-wrap">Dokumentationsmetode</th>
                     <div class="abosoluteContainter">
                       <th class="fixed blue-header">Kontrolresultat</th>
-                      <th class="fixed2 blue-header">Dato & init.</th>
+                      <th class="fixed2 blue-header">Dato & navn</th>
                     </div>
                   </tr>
                 </thead>
@@ -161,14 +154,37 @@
       </div>
     </div>
     <!-- Modal component -->
-    <v-dialog v-model="modalOpen" max-width="500">
+    <v-dialog v-model="modalOpen" max-width="700">
       <template v-slot:activator="{ on }"></template>
+      <v-btn icon color="grey" class="close-btn" @click="modalOpen = false">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
       <img :src="modalImageUrl" style="max-width: 100%" />
+      <v-btn
+        icon
+        color="error"
+        class="delete-btn"
+        @click="deleteImage(modalImageUrl)"
+      >
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
     </v-dialog>
   </v-container>
 </template>
 
 <style scoped>
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.delete-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  border-radius: 5px;
+}
 .container {
   overflow-x: scroll;
   margin-right: 600px;
@@ -236,8 +252,8 @@ import {
   ref,
   uploadBytes,
   listAll,
-  storageRef,
   getDownloadURL,
+  deleteObject,
 } from "firebase/storage";
 import { db } from "../firebase.js";
 import DownloadButton from "../components/DownloadButton";
@@ -298,7 +314,6 @@ export default {
       loading: true,
       showSuccess: false,
       selectedFile: null,
-      successMessage: "",
       imageUrls: [],
       modalOpen: false,
       modalImageUrl: "",
@@ -327,6 +342,25 @@ export default {
 
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
+    async deleteImage(imageUrl) {
+      try {
+        const storage = getStorage();
+        const imageRef = ref(storage, imageUrl);
+        await deleteObject(imageRef);
+
+        // Remove the deleted image URL from the imageUrls array
+        const index = this.imageUrls.findIndex((url) => url === imageUrl);
+        if (index !== -1) {
+          this.imageUrls.splice(index, 1);
+        }
+
+        this.modalOpen = false;
+      } catch (error) {
+        console.error("Error deleting image:", error);
+        alert("Error deleting image: " + error.message);
+      }
+    },
+
     openModal(imageUrl) {
       this.modalImageUrl = imageUrl;
       this.modalOpen = true;
@@ -389,8 +423,6 @@ export default {
 
         // Push the imageUrl to the imageUrls array, så jeg ikke skal fetche hver gang der oploades.
         this.imageUrls.push(imageUrl);
-
-        this.successMessage = "Billedet er vedhæftet";
       } catch (error) {
         console.error("Error uploading file:", error);
         alert("Fejl med upload af logo: " + error);
