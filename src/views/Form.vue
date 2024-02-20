@@ -28,11 +28,20 @@
           <div v-if="imageUrls?.length > 0">
             <h5>Vedhæftede billeder:</h5>
 
-            <a
+            <!-- <a
               v-for="(imageUrl, index) in imageUrls"
               :key="imageUrl"
               :href="imageUrl"
               target="_blank"
+              style="display: block"
+            >
+              Billede {{ index + 1 }}
+            </a> -->
+            <a
+              v-for="(imageUrl, index) in imageUrls"
+              :key="index"
+              href="#"
+              @click.prevent="openModal(imageUrl)"
               style="display: block"
             >
               Billede {{ index + 1 }}
@@ -151,6 +160,11 @@
         />
       </div>
     </div>
+    <!-- Modal component -->
+    <v-dialog v-model="modalOpen" max-width="500">
+      <template v-slot:activator="{ on }"></template>
+      <img :src="modalImageUrl" style="max-width: 100%" />
+    </v-dialog>
   </v-container>
 </template>
 
@@ -286,6 +300,8 @@ export default {
       selectedFile: null,
       successMessage: "",
       imageUrls: [],
+      modalOpen: false,
+      modalImageUrl: "",
     };
   },
 
@@ -311,6 +327,11 @@ export default {
 
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
+    openModal(imageUrl) {
+      this.modalImageUrl = imageUrl;
+      this.modalOpen = true;
+    },
+
     async onFileSelected(event) {
       this.selectedFile = event.target.files[0];
 

@@ -20,6 +20,7 @@ export default {
   methods: {
     async downloadFile() {
       const me = this;
+      console.log(me.name);
 
       const dom = document.querySelector(me.dom);
       var opt = {
