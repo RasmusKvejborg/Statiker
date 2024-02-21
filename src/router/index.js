@@ -50,9 +50,9 @@ const routes = [
     name: "pdf",
     component: Pdf,
     props: true,
-    meta: {
-      requiresAuth: true,
-    },
+    // meta: { // slukket pga Signe fra Simon Skov murermester har brug for at kunne se pdf'er uden at være logget ind
+    //   requiresAuth: true,
+    // },
   },
   {
     path: "/register",

@@ -145,12 +145,9 @@
         >
 
         <!-- download pdf -->
-        <!-- <download-button
-          color="#FF0000"
-          dom="#resultPrinted"
-          :name="controlSchemeNumber + ' - ' + controlSchemeName"
-          :userId="userId"
-        /> -->
+        <v-btn @click="saveAndNavigateToPdf(this.parameter)"
+          >Videre til PDF</v-btn
+        >
       </div>
     </div>
     <!-- Modal component -->
@@ -342,6 +339,14 @@ export default {
 
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
+    async saveAndNavigateToPdf(controlSchemeId) {
+      await this.saveSubmittedData();
+      this.$router.push({
+        name: "pdf",
+        params: { parameter: controlSchemeId },
+      });
+    },
+
     async deleteImage(imageUrl) {
       try {
         const storage = getStorage();
