@@ -145,12 +145,12 @@
         >
 
         <!-- download pdf -->
-        <download-button
+        <!-- <download-button
           color="#FF0000"
           dom="#resultPrinted"
           :name="controlSchemeNumber + ' - ' + controlSchemeName"
           :userId="userId"
-        />
+        /> -->
       </div>
     </div>
     <!-- Modal component -->
