@@ -50,9 +50,9 @@ const routes = [
     name: "pdf",
     component: Pdf,
     props: true,
-    meta: {
-      requiresAuth: true,
-    },
+    // meta: {
+    //   requiresAuth: true,
+    // },
   },
   {
     path: "/register",
