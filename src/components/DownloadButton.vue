@@ -35,22 +35,22 @@ export default {
       };
 
       try {
-        const imageUrl = await this.getImageUrl();
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        img.src = imageUrl;
-        img.onload = () => {
-          let naturalWidth = img.naturalWidth; // Get image width
-          let naturalHeight = img.naturalHeight; // Get image height
+        // const imageUrl = await this.getImageUrl();
+        // const img = new Image();
+        // img.crossOrigin = "anonymous";
+        // img.src = imageUrl;
+        // img.onload = () => {
+        //   let naturalWidth = img.naturalWidth; // Get image width
+        //   let naturalHeight = img.naturalHeight; // Get image height
 
-          var maxHeight = 25; // juster denne for at ændre logo størrelse
+        //   var maxHeight = 25; // juster denne for at ændre logo størrelse
 
-          // Conditionally adjust height if it exceeds 25 pixels
-          if (naturalHeight > maxHeight) {
-            const ratio = maxHeight / naturalHeight;
-            naturalHeight = maxHeight; // Set the height to 50 pixels
-            naturalWidth *= ratio; // Maintain aspect ratio for width
-          }
+        //   // Conditionally adjust height if it exceeds 25 pixels
+        //   if (naturalHeight > maxHeight) {
+        //     const ratio = maxHeight / naturalHeight;
+        //     naturalHeight = maxHeight; // Set the height to 50 pixels
+        //     naturalWidth *= ratio; // Maintain aspect ratio for width
+        //   }
 
           html2pdf()
             .from(dom)
