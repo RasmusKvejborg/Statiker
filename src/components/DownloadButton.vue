@@ -68,14 +68,14 @@ export default {
                   pdf.internal.pageSize.getWidth() - 25, // 25 er vel bare hvor langt til siden den skal
                   pdf.internal.pageSize.getHeight() - 4 // 4 er vel bare hvor langt op
                 );
-                pdf.addImage(
-                  img,
-                  "PNG",
-                  15, // 15px fra venstre
-                  pdf.internal.pageSize.getHeight() - (1 + naturalHeight), // 1 px fra bunden
-                  naturalWidth, // bredde
-                  naturalHeight // højde
-                );
+                // pdf.addImage(
+                //   img,
+                //   "PNG",
+                //   15, // 15px fra venstre
+                //   pdf.internal.pageSize.getHeight() - (1 + naturalHeight), // 1 px fra bunden
+                //   naturalWidth, // bredde
+                //   naturalHeight // højde
+                // );
               }
               pdf.save(me.name);
             });
