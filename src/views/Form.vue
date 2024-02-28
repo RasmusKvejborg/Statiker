@@ -10,7 +10,7 @@
         <v-col cols="7">
           <h2>{{ controlSchemeNumber + " - " + controlSchemeName }}</h2>
         </v-col>
-        <v-col cols="3">
+        <v-col cols="5">
           <!-- vædhæft billede -->
           <v-btn onclick="document.getElementById('getFile').click()">
             Vedhæft billeder
@@ -22,21 +22,23 @@
             style="display: none"
           />
 
-          <div v-if="imageUrls?.length > 0">
+          <div v-if="imageDetails?.length > 0">
             <h5>Vedhæftede billeder:</h5>
-            <div>
+            <div style="column-count: 3">
               <a
-                v-for="(imageUrl, index) in imageUrls"
+                v-for="(image, index) in imageDetails"
                 :key="index"
                 href="#"
-                @click.prevent="openModal(imageUrl)"
+                @click.prevent="openModal(image.url)"
                 style="
-                  display: inline-block;
-                  margin-right: 20px;
-                  margin-bottom: 5px;
+                  display: block; /* Display each link as a block element */
+                  margin-bottom: 5px; /* Add margin at the bottom for spacing */
+                  white-space: nowrap; /* Prevent line breaks within the anchor element */
+                  overflow: hidden; /* Hide overflowing text */
+                  text-overflow: ellipsis;
                 "
               >
-                Billede {{ index + 1 }}
+                {{ image.filename.substring(0, 15) }}
               </a>
             </div>
           </div>
@@ -311,7 +313,7 @@ export default {
       loading: true,
       showSuccess: false,
       selectedFile: null,
-      imageUrls: [],
+      imageDetails: [],
       modalOpen: false,
       modalImageUrl: "",
     };
@@ -354,9 +356,11 @@ export default {
         await deleteObject(imageRef);
 
         // Remove the deleted image URL from the imageUrls array
-        const index = this.imageUrls.findIndex((url) => url === imageUrl);
+        const index = this.imageDetails.findIndex(
+          (image) => image.url === imageUrl
+        );
         if (index !== -1) {
-          this.imageUrls.splice(index, 1);
+          this.imageDetails.splice(index, 1);
         }
 
         this.modalOpen = false;
@@ -420,14 +424,13 @@ export default {
 
       try {
         await uploadBytes(storageRef, this.selectedFile);
-        // alert("Billedet er uploadet og vil fremgå på PDF dokumenter");
 
-        const imageUrl = await getDownloadURL(storageRef);
+        const url = await getDownloadURL(storageRef);
 
-        console.log("IUMAGFS", imageUrl);
+        const filename = this.selectedFile.name.split("/").pop();
 
         // Push the imageUrl to the imageUrls array, så jeg ikke skal fetche hver gang der oploades.
-        this.imageUrls.push(imageUrl);
+        this.imageDetails.push({ url, filename });
       } catch (error) {
         console.error("Error uploading file:", error);
         alert("Fejl med upload af logo: " + error);
@@ -442,10 +445,18 @@ export default {
         listAll(userImageRef).then(async (res) => {
           const { items } = res;
           const urls = await Promise.all(
-            items.map((item) => getDownloadURL(item))
-          );
+            items.map(async (item) => {
+              const url = await getDownloadURL(item);
 
-          this.imageUrls = urls;
+              const filename = item.name
+                .split("/")
+                .pop()
+                .replace(/\.[^/.]+$/, ""); // Removes file extension like .jpg, .png
+
+              return { url, filename };
+            })
+          );
+          this.imageDetails = urls;
         });
       } catch (error) {
         throw new Error("Failed to fetch image URL: " + error);

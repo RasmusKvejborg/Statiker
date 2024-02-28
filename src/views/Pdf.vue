@@ -89,14 +89,17 @@
             </div>
           </div>
         </div>
-        <div class="image-container">
+        <div
+          v-for="(image, index) in imageUrls"
+          style="display: inline-block; margin-bottom: 10px"
+        >
           <img
-            v-for="(imageUrl, index) in imageUrls"
             :key="index"
-            :src="imageUrl"
+            :src="image.url"
             alt="Image"
-            style="max-height: 250px; margin-right: 10px; display: inline-block"
+            style="max-height: 250px; margin-right: 10px; margin-bottom: -7px"
           />
+          <p>{{ image.filename.substring(0, 35) }}</p>
         </div>
       </div>
 
@@ -188,8 +191,18 @@ export default {
         listAll(userImageRef).then(async (res) => {
           const { items } = res;
           const urls = await Promise.all(
-            items.map((item) => getDownloadURL(item))
+            items.map(async (item) => {
+              const url = await getDownloadURL(item);
+
+              const filename = item.name
+                .split("/")
+                .pop()
+                .replace(/\.[^/.]+$/, ""); // Removes file extension like .jpg, .png
+
+              return { url, filename };
+            })
           );
+          this.imageDetails = urls;
 
           this.imageUrls = urls;
         });
