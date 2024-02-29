@@ -12,7 +12,7 @@
         </v-col>
         <v-col cols="5">
           <!-- vædhæft billede -->
-          <v-btn onclick="document.getElementById('getFile').click()">
+          <!-- <v-btn onclick="document.getElementById('getFile').click()">
             Vedhæft billeder
           </v-btn>
           <input
@@ -20,7 +20,7 @@
             id="getFile"
             @change="onFileSelected"
             style="display: none"
-          />
+          /> -->
 
           <div v-if="imageDetails?.length > 0">
             <h5>Vedhæftede billeder:</h5>
@@ -111,6 +111,23 @@
                     </td>
                     <div class="abosoluteContainter">
                       <td class="fixedtd2">
+                        <v-icon
+                          @click="handlePhotoClick(index, key)"
+                          style="
+                            position: absolute;
+                            bottom: 5px;
+                            right: 5px;
+                            cursor: pointer;
+                          "
+                        >
+                          mdi-camera
+                        </v-icon>
+                        <input
+                          type="file"
+                          id="getFile"
+                          @change="onFileSelected"
+                          style="display: none"
+                        />
                         <textarea
                           class="textarea2"
                           v-model="
@@ -222,11 +239,13 @@
 .textarea {
   width: 100%;
   height: 100%;
+  outline: none;
 }
 
 .textarea2 {
   width: 100%;
   height: 100%;
+  outline: none; /* fjern denne hvis jeg gerne vil se størrelsen af textarea */
 }
 
 .success-button {
@@ -238,14 +257,7 @@
 <script>
 ///////////////////////////////////////////////////////////////////// script ////////////////////////////////////////////////////////////////////////////////
 
-import {
-  collection,
-  addDoc,
-  getDocs,
-  getDoc,
-  doc,
-  setDoc,
-} from "firebase/firestore";
+import { getDoc, doc, setDoc } from "firebase/firestore";
 import {
   getStorage,
   ref,
@@ -316,6 +328,7 @@ export default {
       imageDetails: [],
       modalOpen: false,
       modalImageUrl: "",
+      photoLeadingName: "",
     };
   },
 
@@ -341,6 +354,14 @@ export default {
 
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
+    handlePhotoClick(index, key) {
+      console.log("Index:", index);
+      console.log("Key:", key);
+      this.photoLeadingName = `B${index}.${key}: `;
+      document.getElementById("getFile").click();
+      console.log("Photo leading name:", this.photoLeadingName);
+    },
+
     async saveAndNavigateToPdf(controlSchemeId) {
       await this.saveSubmittedData();
       this.$router.push({
@@ -377,6 +398,7 @@ export default {
 
     async onFileSelected(event) {
       this.selectedFile = event.target.files[0];
+      console.log("Selected file:", this.selectedFile);
 
       if (
         this.selectedFile.type != "image/png" &&
@@ -416,18 +438,20 @@ export default {
         }
       }
 
+      const filename = `${this.photoLeadingName}${this.selectedFile.name
+        .split("/")
+        .pop()}`;
+
       const storage = getStorage();
       const storageRef = ref(
         storage,
-        `FormImages/${this.parameter}/${this.selectedFile.name}`
+        `FormImages/${this.parameter}/${filename}`
       );
 
       try {
         await uploadBytes(storageRef, this.selectedFile);
 
         const url = await getDownloadURL(storageRef);
-
-        const filename = this.selectedFile.name.split("/").pop();
 
         // Push the imageUrl to the imageUrls array, så jeg ikke skal fetche hver gang der oploades.
         this.imageDetails.push({ url, filename });

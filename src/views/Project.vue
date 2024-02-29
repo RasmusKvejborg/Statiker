@@ -34,6 +34,34 @@
         </template>
       </v-select>
 
+      <!-----------  opret link / gem skabelon   ------------->
+
+      <div class="">
+        <v-row>
+          <v-col cols="2">
+            <v-btn color="primary" @click="createLink()">
+              {{ hasBeenCreatedBefore ? "Gem" : "Opret link" }}
+            </v-btn>
+          </v-col>
+          <v-col cols="3" v-if="isAddingTemplate">
+            <input
+              v-model="newTemplateName"
+              placeholder="Skabelon-navn"
+              class="template-input"
+            />
+          </v-col>
+          <v-col>
+            <v-checkbox
+              class="margin-20"
+              v-model="isAddingTemplate"
+              label="Gem som skabelon"
+            ></v-checkbox>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+      </div>
+      <!-- slut opret link / gem skabelon slut  -->
+
       <div v-for="index in 6" :key="index" class="controlschemes">
         <h3>B{{ index }}: {{ headerTexts["B" + index] }}</h3>
         <v-table>
@@ -142,14 +170,16 @@
       <!-- --------------------oversigt slut ------------------------->
     </div>
 
-    <div class="margin20">
+    <!-----------  opret link / gem skabelon   ------------->
+
+    <div class="">
       <v-row>
         <v-col cols="2">
           <v-btn color="primary" @click="createLink()">
             {{ hasBeenCreatedBefore ? "Gem" : "Opret link" }}
           </v-btn>
         </v-col>
-        <v-col cols="2" v-if="isAddingTemplate">
+        <v-col cols="3" v-if="isAddingTemplate">
           <input
             v-model="newTemplateName"
             placeholder="Skabelon-navn"
@@ -160,12 +190,13 @@
           <v-checkbox
             class="margin-20"
             v-model="isAddingTemplate"
-            label="Gem ny skabelon til fremtidig brug, når linket oprettes"
+            label="Gem som skabelon"
           ></v-checkbox>
         </v-col>
         <v-spacer></v-spacer>
       </v-row>
     </div>
+    <!-- slut opret link / gem skabelon slut  -->
   </v-container>
 </template>
 
