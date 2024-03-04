@@ -10,18 +10,7 @@
         <v-col cols="7">
           <h2>{{ controlSchemeNumber + " - " + controlSchemeName }}</h2>
         </v-col>
-        <v-col cols="5">
-          <!-- vædhæft billede -->
-          <!-- <v-btn onclick="document.getElementById('getFile').click()">
-            Vedhæft billeder
-          </v-btn>
-          <input
-            type="file"
-            id="getFile"
-            @change="onFileSelected"
-            style="display: none"
-          /> -->
-
+        <!-- <v-col cols="5">
           <div v-if="imageDetails?.length > 0">
             <h5>Vedhæftede billeder:</h5>
             <div style="column-count: 3">
@@ -42,7 +31,7 @@
               </a>
             </div>
           </div>
-        </v-col>
+        </v-col> -->
       </v-row>
       <div id="resultPrinted">
         <div v-for="index in 6" :key="index" class="controlschemes">
@@ -110,7 +99,47 @@
                       </p>
                     </td>
                     <div class="abosoluteContainter">
+                      <!-- -------------------------------------------- -->
+
                       <td class="fixedtd2">
+                        <div
+                          style="
+                            display: flex;
+                            flex-direction: column;
+                            height: 100%;
+                          "
+                        >
+                          <div style="flex-grow: 1">
+                            <textarea
+                              class="textarea2"
+                              v-model="
+                                rightFormData['B' + index]['kontrolRes'][key]
+                              "
+                            ></textarea>
+                          </div>
+
+                          <div style="display: flex; overflow-x: auto">
+                            <div v-for="image in imageDetails" style="">
+                              <div style="">
+                                <a
+                                  v-if="isImageForIndex(image, index, key)"
+                                  href="#"
+                                  @click.prevent="openModal(image.url)"
+                                  style="
+                                    font-size: smaller; /* Reduce font size */
+                                    margin-right: 10px; /* Remove margin */
+                                    padding: 0; /* Remove padding */
+                                    white-space: nowrap; /* Prevent wrapping */
+                                    text-overflow: ellipsis;
+                                  "
+                                >
+                                  {{ image.filename.substring(0, 20) }}
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                         <v-icon
                           @click="handlePhotoClick(index, key)"
                           style="
@@ -128,13 +157,9 @@
                           @change="onFileSelected"
                           style="display: none"
                         />
-                        <textarea
-                          class="textarea2"
-                          v-model="
-                            rightFormData['B' + index]['kontrolRes'][key]
-                          "
-                        ></textarea>
                       </td>
+
+                      <!-- -.....---------------------------------------- -->
                       <td class="fixedtd">
                         <textarea
                           class="textarea"
@@ -354,6 +379,34 @@ export default {
 
   //------------- -------------- ------------- ---------- METHODS ------------ ---------- ------------- ---------------- ----------
   methods: {
+    isImageForIndex(image, index, key) {
+      console.log(image);
+
+      if (image && image.filename) {
+        // Extract the index and key from the filename
+        const parts = image.filename.split(".");
+        const imageIndex = parseInt(parts[0].substr(1)); // Extract the index after "B"
+        const imageKey = parseInt(parts[1]); // Extract the key after the dot
+
+        // Check if the extracted index and key match the provided index and key
+        console.log(
+          "imageIndex:",
+          imageIndex,
+          imageIndex === index && imageKey === key,
+          imageKey,
+          "index: ",
+          index,
+          "key: ",
+          key
+        );
+
+        return imageIndex == index && imageKey == key;
+      }
+
+      // Return false if image is undefined or does not have the filename property
+      return false;
+    },
+
     handlePhotoClick(index, key) {
       console.log("Index:", index);
       console.log("Key:", key);
