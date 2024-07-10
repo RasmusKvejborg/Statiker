@@ -116,6 +116,11 @@ export default {
               this.errorMessage = "Forkert kodeord";
               break;
 
+            case "auth/user-disabled":
+              this.errorMessage =
+                "Brugeren er deaktiveret, pga. manglende betaling. Kontakt Rasmus på rasmuskvejborg@gmail.com";
+              break;
+
             case "auth/invalid-login-credentials":
               this.errorMessage = "Forkert email eller kodeord.";
               this.resetMessage = "Nulstil kodeord";
